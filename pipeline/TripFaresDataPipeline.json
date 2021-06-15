@@ -241,25 +241,32 @@
 		],
 		"parameters": {
 			"SchemaName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "tripFares"
 			},
 			"SynapseWorkspaceName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "synapsewsmsft"
 			},
 			"SQLDedicatedPoolName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sqlpoolmsft"
 			},
 			"SQLLoginUsername": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "osama"
 			},
 			"KeyVaultName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "kvmsft"
 			},
 			"datalakeAccountName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "adlsmsft"
 			},
 			"stagingContainer": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "filesystemmsft"
 			}
 		},
 		"folder": {
