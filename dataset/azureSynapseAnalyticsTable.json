@@ -5,11 +5,19 @@
 			"referenceName": "TripFaresSynapseAnalyticsLinkedService",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"SchemaName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "tripfare",
+			"schema": {
+				"value": "@dataset().SchemaName",
+				"type": "Expression"
+			},
 			"table": "AggregateTaxiData"
 		}
 	}
