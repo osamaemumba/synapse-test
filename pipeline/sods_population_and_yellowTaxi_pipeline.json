@@ -149,7 +149,7 @@
 							}
 						},
 						"folderPath": {
-							"value": "@pipeline().parameters.stagingContainer",
+							"value": "@concat(pipeline().parameters.stagingContainer,'/polyBaseStage')",
 							"type": "Expression"
 						}
 					},
