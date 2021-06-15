@@ -5,11 +5,23 @@
 		"workspaceName": {
 			"value": "synapsewsmsft"
 		},
+		"TripFaresSynapseAnalyticsLinkedService_connectionString": {
+			"value": ""
+		},
 		"sinkSynapseLinkedservice_connectionString": {
 			"value": ""
 		},
 		"synapsewsmsft-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
+		},
+		"HttpServerTripDataLinkedService_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/djpmsft/ADF_Labs/master/sample-data/TripData.csv"
+		},
+		"HttpServerTripFareDataLinkedService_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/djpmsft/ADF_Labs/master/sample-data/TripFares.csv"
+		},
+		"TripFaresDataLakeStorageLinkedService_properties_typeProperties_url": {
+			"value": "@{concat('https://',linkedService().datalakeAccountName,'.dfs.core.windows.net')}"
 		},
 		"keyVaultLinkedservice_properties_typeProperties_baseUrl": {
 			"value": "@{concat('https://',linkedService().keyVaultName,'.vault.azure.net/')}"
@@ -17,14 +29,14 @@
 		"polybaseStagingAdlsLinkedservice_properties_typeProperties_url": {
 			"value": "@{concat('https://',linkedService().datalakeAccountName,'.dfs.core.windows.net')}"
 		},
+		"sodsSourceBlobLinkedservice_properties_typeProperties_sasUri_secretName": {
+			"value": "sodsSourceBlobSasUri"
+		},
 		"sourceBlobLinkedservice_properties_typeProperties_sasUri_secretName": {
 			"value": "sourceBlobSasUri"
 		},
 		"synapsewsmsft-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://adlsmsft.dfs.core.windows.net"
-		},
-		"sodsSourceBlobLinkedservice_sasUri": {
-			"value": ""
 		}
 	}
 }
