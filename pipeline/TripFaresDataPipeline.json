@@ -55,7 +55,21 @@
 				"outputs": [
 					{
 						"referenceName": "tripDataSink",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"stagingContainer": {
+								"value": "@pipeline().parameters.stagingContainer",
+								"type": "Expression"
+							},
+							"datalakeAccountName": {
+								"value": "@pipeline().parameters.datalakeAccountName",
+								"type": "Expression"
+							},
+							"keyVaultName": {
+								"value": "@pipeline().parameters.KeyVaultName",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
