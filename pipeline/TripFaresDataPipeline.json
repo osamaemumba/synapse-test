@@ -126,7 +126,21 @@
 				"outputs": [
 					{
 						"referenceName": "faresDataSink",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"keyVaultName": {
+								"value": "@pipeline().parameters.KeyVaultName",
+								"type": "Expression"
+							},
+							"datalakeAccountName": {
+								"value": "@pipeline().parameters.datalakeAccountName",
+								"type": "Expression"
+							},
+							"stagingContainer": {
+								"value": "@pipeline().parameters.stagingContainer",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},

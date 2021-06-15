@@ -3,7 +3,28 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "TripFaresDataLakeStorageLinkedService",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"keyVaultName": {
+					"value": "@dataset().keyVaultName",
+					"type": "Expression"
+				},
+				"datalakeAccountName": {
+					"value": "@dataset().datalakeAccountName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"keyVaultName": {
+				"type": "string"
+			},
+			"datalakeAccountName": {
+				"type": "string"
+			},
+			"stagingContainer": {
+				"type": "string"
+			}
 		},
 		"folder": {
 			"name": "TripFareDatasets"
@@ -14,7 +35,10 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "fares-data.csv",
-				"fileSystem": "staging-container"
+				"fileSystem": {
+					"value": "@dataset().stagingContainer",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
