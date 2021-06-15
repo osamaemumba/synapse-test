@@ -189,6 +189,29 @@
 				}
 			}
 		],
+		"parameters": {
+			"SchemaName": {
+				"type": "string"
+			},
+			"SynapseWorkspaceName": {
+				"type": "string"
+			},
+			"SQLDedicatedPoolName": {
+				"type": "string"
+			},
+			"SQLLoginUsername": {
+				"type": "string"
+			},
+			"KeyVaultName": {
+				"type": "string"
+			},
+			"datalakeAccountName": {
+				"type": "string"
+			},
+			"stagingContainer": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "TripFaresDataPipeline"
 		},
