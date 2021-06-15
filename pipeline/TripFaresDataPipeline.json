@@ -266,7 +266,7 @@
 			},
 			"stagingContainer": {
 				"type": "string",
-				"defaultValue": "filesystemmsft"
+				"defaultValue": "public"
 			}
 		},
 		"folder": {
