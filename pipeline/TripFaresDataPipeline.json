@@ -315,7 +315,7 @@
 			},
 			"SynapseWorkspaceName": {
 				"type": "string",
-				"defaultValue": "synapsewsmsft.database.core.net"
+				"defaultValue": "synapsewsmsft.database.windows.net"
 			},
 			"SQLDedicatedPoolName": {
 				"type": "string",
