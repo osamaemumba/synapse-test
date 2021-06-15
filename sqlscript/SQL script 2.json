@@ -1,8 +1,8 @@
 {
-	"name": "SQL script 1",
+	"name": "SQL script 2",
 	"properties": {
 		"content": {
-			"query": "\n\n\n\ndfSSELECT TOP (100) [payment_type]\n,[average_fare]\n,[total_trip_distance]\n FROM [dbo].[AggregateTaxiData]",
+			"query": "SELECT TOP (100) [payment_type]\n,[average_fare]\n,[total_trip_distance]\n FROM [tripfare].[AggregateTaxiData]",
 			"metadata": {
 				"language": "sql"
 			},
