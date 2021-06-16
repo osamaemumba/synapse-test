@@ -16,9 +16,6 @@
 			}
 		},
 		"parameters": {
-			"stagingContainer": {
-				"type": "string"
-			},
 			"datalakeAccountName": {
 				"type": "string"
 			},
@@ -35,10 +32,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "trip-data.csv",
-				"fileSystem": {
-					"value": "@dataset().stagingContainer",
-					"type": "Expression"
-				}
+				"fileSystem": "public"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

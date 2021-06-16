@@ -57,10 +57,6 @@
 						"referenceName": "tripDataSink",
 						"type": "DatasetReference",
 						"parameters": {
-							"stagingContainer": {
-								"value": "@pipeline().parameters.stagingContainer",
-								"type": "Expression"
-							},
 							"datalakeAccountName": {
 								"value": "@pipeline().parameters.datalakeAccountName",
 								"type": "Expression"
@@ -135,10 +131,6 @@
 							"datalakeAccountName": {
 								"value": "@pipeline().parameters.datalakeAccountName",
 								"type": "Expression"
-							},
-							"stagingContainer": {
-								"value": "@pipeline().parameters.stagingContainer",
-								"type": "Expression"
 							}
 						}
 					}
@@ -169,10 +161,6 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"TripDataCSV": {
-								"stagingContainer": {
-									"value": "@pipeline().parameters.stagingContainer",
-									"type": "Expression"
-								},
 								"datalakeAccountName": {
 									"value": "@pipeline().parameters.datalakeAccountName",
 									"type": "Expression"
@@ -189,10 +177,6 @@
 								},
 								"datalakeAccountName": {
 									"value": "@pipeline().parameters.datalakeAccountName",
-									"type": "Expression"
-								},
-								"stagingContainer": {
-									"value": "@pipeline().parameters.stagingContainer",
 									"type": "Expression"
 								}
 							},
@@ -312,10 +296,6 @@
 			"datalakeAccountName": {
 				"type": "string",
 				"defaultValue": "adlsmsft"
-			},
-			"stagingContainer": {
-				"type": "string",
-				"defaultValue": "public"
 			}
 		},
 		"folder": {
