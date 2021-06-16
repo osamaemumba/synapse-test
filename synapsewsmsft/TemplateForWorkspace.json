@@ -21,11 +21,11 @@
 		},
 		"HttpServerTripDataLinkedService_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://raw.githubusercontent.com/djpmsft/ADF_Labs/master/sample-data/TripData.csv"
+			"defaultValue": "https://raw.githubusercontent.com/osamaemumba/101-synapse-poc/main/tripDataAndFaresCSV/trip-data.csv"
 		},
 		"HttpServerTripFareDataLinkedService_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://raw.githubusercontent.com/djpmsft/ADF_Labs/master/sample-data/TripFares.csv"
+			"defaultValue": "https://raw.githubusercontent.com/osamaemumba/101-synapse-poc/main/tripDataAndFaresCSV/fares-data.csv"
 		},
 		"TripFaresDataLakeStorageLinkedService_properties_typeProperties_url": {
 			"type": "string",

@@ -15,10 +15,10 @@
 			"value": ""
 		},
 		"HttpServerTripDataLinkedService_properties_typeProperties_url": {
-			"value": "https://raw.githubusercontent.com/djpmsft/ADF_Labs/master/sample-data/TripData.csv"
+			"value": "https://raw.githubusercontent.com/osamaemumba/101-synapse-poc/main/tripDataAndFaresCSV/trip-data.csv"
 		},
 		"HttpServerTripFareDataLinkedService_properties_typeProperties_url": {
-			"value": "https://raw.githubusercontent.com/djpmsft/ADF_Labs/master/sample-data/TripFares.csv"
+			"value": "https://raw.githubusercontent.com/osamaemumba/101-synapse-poc/main/tripDataAndFaresCSV/fares-data.csv"
 		},
 		"TripFaresDataLakeStorageLinkedService_properties_typeProperties_url": {
 			"value": "@{concat('https://',linkedService().datalakeAccountName,'.dfs.core.windows.net')}"
