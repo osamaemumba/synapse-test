@@ -118,10 +118,6 @@
 								"referenceName": "tripDataSink",
 								"type": "DatasetReference",
 								"parameters": {
-									"stagingContainer": {
-										"value": "@pipeline().parameters.stagingContainer",
-										"type": "Expression"
-									},
 									"datalakeAccountName": {
 										"value": "@pipeline().parameters.datalakeAccountName",
 										"type": "Expression"
@@ -197,10 +193,6 @@
 									"datalakeAccountName": {
 										"value": "@pipeline().parameters.datalakeAccountName",
 										"type": "Expression"
-									},
-									"stagingContainer": {
-										"value": "@pipeline().parameters.stagingContainer",
-										"type": "Expression"
 									}
 								}
 							}
@@ -232,10 +224,6 @@
 								"parameters": {},
 								"datasetParameters": {
 									"TripDataCSV": {
-										"stagingContainer": {
-											"value": "@pipeline().parameters.stagingContainer",
-											"type": "Expression"
-										},
 										"datalakeAccountName": {
 											"value": "@pipeline().parameters.datalakeAccountName",
 											"type": "Expression"
@@ -252,10 +240,6 @@
 										},
 										"datalakeAccountName": {
 											"value": "@pipeline().parameters.datalakeAccountName",
-											"type": "Expression"
-										},
-										"stagingContainer": {
-											"value": "@pipeline().parameters.stagingContainer",
 											"type": "Expression"
 										}
 									},
@@ -283,26 +267,7 @@
 									}
 								}
 							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "TripFaresDataLakeStorageLinkedService",
-									"type": "LinkedServiceReference",
-									"parameters": {
-										"keyVaultName": {
-											"value": "@pipeline().parameters.KeyVaultName",
-											"type": "Expression"
-										},
-										"datalakeAccountName": {
-											"value": "@pipeline().parameters.datalakeAccountName",
-											"type": "Expression"
-										}
-									}
-								},
-								"folderPath": {
-									"value": "@concat(pipeline().parameters.stagingContainer,'/polyBaseStage')",
-									"type": "Expression"
-								}
-							},
+							"staging": {},
 							"compute": {
 								"coreCount": 8,
 								"computeType": "General"
@@ -395,10 +360,6 @@
 					"datalakeAccountName": {
 						"type": "string",
 						"defaultValue": "adlsmsft"
-					},
-					"stagingContainer": {
-						"type": "string",
-						"defaultValue": "public"
 					}
 				},
 				"folder": {
@@ -412,7 +373,7 @@
 				"[concat(variables('workspaceId'), '/datasets/faresDataSource')]",
 				"[concat(variables('workspaceId'), '/datasets/faresDataSink')]",
 				"[concat(variables('workspaceId'), '/dataflows/tripFaresDataTransformations')]",
-				"[concat(variables('workspaceId'), '/linkedServices/TripFaresDataLakeStorageLinkedService')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
 				"[concat(variables('workspaceId'), '/datasets/azureSynapseAnalyticsSchema')]"
 			]
 		},
@@ -979,13 +940,12 @@
 				},
 				"parameters": {
 					"keyVaultName": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "kvmsft"
 					},
 					"datalakeAccountName": {
-						"type": "string"
-					},
-					"stagingContainer": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "adlsmsft"
 					}
 				},
 				"folder": {
@@ -997,17 +957,59 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "fares-data.csv",
-						"fileSystem": {
-							"value": "@dataset().stagingContainer",
-							"type": "Expression"
-						}
+						"fileSystem": "public"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "medallion",
+						"type": "String"
+					},
+					{
+						"name": "hack_license",
+						"type": "String"
+					},
+					{
+						"name": "vendor_id",
+						"type": "String"
+					},
+					{
+						"name": "pickup_datetime",
+						"type": "String"
+					},
+					{
+						"name": "payment_type",
+						"type": "String"
+					},
+					{
+						"name": "fare_amount",
+						"type": "String"
+					},
+					{
+						"name": "surcharge",
+						"type": "String"
+					},
+					{
+						"name": "mta_tax",
+						"type": "String"
+					},
+					{
+						"name": "tip_amount",
+						"type": "String"
+					},
+					{
+						"name": "tolls_amount",
+						"type": "String"
+					},
+					{
+						"name": "total_amount",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/TripFaresDataLakeStorageLinkedService')]"
@@ -1357,9 +1359,6 @@
 					}
 				},
 				"parameters": {
-					"stagingContainer": {
-						"type": "string"
-					},
 					"datalakeAccountName": {
 						"type": "string"
 					},
@@ -1376,17 +1375,71 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "trip-data.csv",
-						"fileSystem": {
-							"value": "@dataset().stagingContainer",
-							"type": "Expression"
-						}
+						"fileSystem": "public"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "medallion",
+						"type": "String"
+					},
+					{
+						"name": "hack_license",
+						"type": "String"
+					},
+					{
+						"name": "vendor_id",
+						"type": "String"
+					},
+					{
+						"name": "rate_code",
+						"type": "String"
+					},
+					{
+						"name": "store_and_fwd_flag",
+						"type": "String"
+					},
+					{
+						"name": "pickup_datetime",
+						"type": "String"
+					},
+					{
+						"name": "dropoff_datetime",
+						"type": "String"
+					},
+					{
+						"name": "passenger_count",
+						"type": "String"
+					},
+					{
+						"name": "trip_time_in_secs",
+						"type": "String"
+					},
+					{
+						"name": "trip_distance",
+						"type": "String"
+					},
+					{
+						"name": "pickup_longitude",
+						"type": "String"
+					},
+					{
+						"name": "pickup_latitude",
+						"type": "String"
+					},
+					{
+						"name": "dropoff_longitude",
+						"type": "String"
+					},
+					{
+						"name": "dropoff_latitude",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/TripFaresDataLakeStorageLinkedService')]"
@@ -1920,13 +1973,13 @@
 					],
 					"transformations": [
 						{
-							"name": "InnerJoinWithTripFares"
+							"name": "AggregateByPaymentType"
 						},
 						{
-							"name": "AggregateByPaymentType"
+							"name": "InnerJoinWithTripFares"
 						}
 					],
-					"script": "source(output(\n\t\tmedallion as string,\n\t\thack_license as string,\n\t\tvendor_id as string,\n\t\trate_code as short,\n\t\tstore_and_fwd_flag as string,\n\t\tpickup_datetime as timestamp,\n\t\tdropoff_datetime as timestamp,\n\t\tpassenger_count as short,\n\t\ttrip_time_in_secs as short,\n\t\ttrip_distance as double,\n\t\tpickup_longitude as double,\n\t\tpickup_latitude as double,\n\t\tdropoff_longitude as double,\n\t\tdropoff_latitude as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinferDriftedColumnTypes: true,\n\tignoreNoFilesFound: false) ~> TripDataCSV\nsource(output(\n\t\tmedallion as string,\n\t\thack_license as string,\n\t\tvendor_id as string,\n\t\tpickup_datetime as timestamp,\n\t\tpayment_type as string,\n\t\tfare_amount as double,\n\t\tsurcharge as boolean,\n\t\tmta_tax as double,\n\t\ttip_amount as double,\n\t\ttolls_amount as double,\n\t\ttotal_amount as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinferDriftedColumnTypes: true,\n\tignoreNoFilesFound: false) ~> FaresDataCSV\nTripDataCSV, FaresDataCSV join(TripDataCSV@medallion == FaresDataCSV@medallion\n\t&& TripDataCSV@hack_license == FaresDataCSV@hack_license\n\t&& TripDataCSV@vendor_id == FaresDataCSV@vendor_id\n\t&& TripDataCSV@pickup_datetime == FaresDataCSV@pickup_datetime,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> InnerJoinWithTripFares\nInnerJoinWithTripFares aggregate(groupBy(payment_type),\n\taverage_fare = avg(toInteger(total_amount)),\n\t\ttotal_trip_distance = sum(toInteger(trip_distance))) ~> AggregateByPaymentType\nAggregateByPaymentType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> SQLDWSink"
+					"script": "source(output(\n\t\tmedallion as string,\n\t\thack_license as string,\n\t\tvendor_id as string,\n\t\trate_code as string,\n\t\tstore_and_fwd_flag as string,\n\t\tpickup_datetime as string,\n\t\tdropoff_datetime as string,\n\t\tpassenger_count as string,\n\t\ttrip_time_in_secs as string,\n\t\ttrip_distance as string,\n\t\tpickup_longitude as string,\n\t\tpickup_latitude as string,\n\t\tdropoff_longitude as string,\n\t\tdropoff_latitude as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinferDriftedColumnTypes: true,\n\tignoreNoFilesFound: false) ~> TripDataCSV\nsource(output(\n\t\tmedallion as string,\n\t\thack_license as string,\n\t\tvendor_id as string,\n\t\tpickup_datetime as string,\n\t\tpayment_type as string,\n\t\tfare_amount as string,\n\t\tsurcharge as string,\n\t\tmta_tax as string,\n\t\ttip_amount as string,\n\t\ttolls_amount as string,\n\t\ttotal_amount as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinferDriftedColumnTypes: true,\n\tignoreNoFilesFound: false) ~> FaresDataCSV\nInnerJoinWithTripFares aggregate(groupBy(payment_type),\n\taverage_fare = avg(toInteger(total_amount)),\n\t\ttotal_trip_distance = sum(toInteger(trip_distance))) ~> AggregateByPaymentType\nTripDataCSV, FaresDataCSV join(TripDataCSV@medallion == FaresDataCSV@medallion\n\t&& TripDataCSV@hack_license == FaresDataCSV@hack_license\n\t&& TripDataCSV@vendor_id == FaresDataCSV@vendor_id\n\t&& TripDataCSV@pickup_datetime == FaresDataCSV@pickup_datetime,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> InnerJoinWithTripFares\nAggregateByPaymentType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> SQLDWSink"
 				}
 			},
 			"dependsOn": [
