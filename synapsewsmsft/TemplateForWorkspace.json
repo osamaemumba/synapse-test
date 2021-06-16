@@ -48,11 +48,12 @@
 				"activities": [
 					{
 						"name": "IngestTripDataIntoADLS",
+						"description": "Copies the trip data csv file from the git repo and loads it into the ADLS.",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
+							"timeout": "0.00:10:00",
+							"retry": 3,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
@@ -116,11 +117,12 @@
 					},
 					{
 						"name": "IngestTripFaresDataIntoADLS",
+						"description": "Copies the trip fare data csv file from the git repo and loads it into the ADLS.",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
+							"timeout": "0.00:10:00",
+							"retry": 3,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
@@ -184,6 +186,7 @@
 					},
 					{
 						"name": "JoinAndAggregateData",
+						"description": "Reads the raw data from both CSV files inside the ADLS, performs the desired transformations (inner join and aggregation) and writes the transformed data into the synapse SQL pool.",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
@@ -194,8 +197,8 @@
 							}
 						],
 						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
+							"timeout": "0.00:30:00",
+							"retry": 3,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
@@ -261,6 +264,7 @@
 					},
 					{
 						"name": "Create Schema If Does Not Exists",
+						"description": "Creates the schema inside the SQL dedicated pool. Shema name comes from the pipeline parameter 'SchemaName'.",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -277,8 +281,8 @@
 							}
 						],
 						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
+							"timeout": "0.00:05:00",
+							"retry": 3,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
