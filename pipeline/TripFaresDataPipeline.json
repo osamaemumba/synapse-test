@@ -4,6 +4,7 @@
 		"activities": [
 			{
 				"name": "IngestTripDataIntoADLS",
+				"description": "Copies the trip data csv file from the git repo and loads it into the ADLS.",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -71,6 +72,7 @@
 			},
 			{
 				"name": "IngestTripFaresDataIntoADLS",
+				"description": "Copies the trip fare data csv file from the git repo and loads it into the ADLS.",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -138,6 +140,7 @@
 			},
 			{
 				"name": "JoinAndAggregateData",
+				"description": "Reads the raw data from both CSV files inside the ADLS, performs the desired transformations (inner join and aggregation) and writes the transformed data into the synapse SQL pool.",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
@@ -213,6 +216,7 @@
 			},
 			{
 				"name": "Create Schema If Does Not Exists",
+				"description": "Creates the schema inside the SQL dedicated pool. Shema name comes from the pipeline parameter 'SchemaName'.",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -230,7 +234,7 @@
 				],
 				"policy": {
 					"timeout": "0.00:05:00",
-					"retry": 0,
+					"retry": 3,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
