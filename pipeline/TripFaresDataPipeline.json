@@ -220,26 +220,6 @@
 							}
 						}
 					},
-					"staging": {
-						"linkedService": {
-							"referenceName": "TripFaresDataLakeStorageLinkedService",
-							"type": "LinkedServiceReference",
-							"parameters": {
-								"keyVaultName": {
-									"value": "@pipeline().parameters.KeyVaultName",
-									"type": "Expression"
-								},
-								"datalakeAccountName": {
-									"value": "@pipeline().parameters.datalakeAccountName",
-									"type": "Expression"
-								}
-							}
-						},
-						"folderPath": {
-							"value": "@concat(pipeline().parameters.stagingContainer,'/polyBaseStage')",
-							"type": "Expression"
-						}
-					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
