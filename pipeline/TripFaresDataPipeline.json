@@ -182,28 +182,6 @@
 									"value": "@pipeline().parameters.datalakeAccountName",
 									"type": "Expression"
 								}
-							},
-							"SQLDWSink": {
-								"SchemaName": {
-									"value": "@pipeline().parameters.SchemaName",
-									"type": "Expression"
-								},
-								"SynapseWorkspaceName": {
-									"value": "@pipeline().parameters.SynapseWorkspaceName",
-									"type": "Expression"
-								},
-								"SQLDedicatedPoolName": {
-									"value": "@pipeline().parameters.SQLDedicatedPoolName",
-									"type": "Expression"
-								},
-								"keyVaultName": {
-									"value": "@pipeline().parameters.KeyVaultName",
-									"type": "Expression"
-								},
-								"SQLLoginUsername": {
-									"value": "@pipeline().parameters.SQLLoginUsername",
-									"type": "Expression"
-								}
 							}
 						}
 					},
@@ -283,11 +261,11 @@
 			},
 			"SynapseWorkspaceName": {
 				"type": "string",
-				"defaultValue": "synapsewsmsft.database.windows.net"
+				"defaultValue": "emuty7rfs52cbmq6pocws1.database.windows.net"
 			},
 			"SQLDedicatedPoolName": {
 				"type": "string",
-				"defaultValue": "sqlpoolmsft"
+				"defaultValue": "emuty7rfs52cbmq6pocws1p1"
 			},
 			"SQLLoginUsername": {
 				"type": "string",
@@ -295,11 +273,11 @@
 			},
 			"KeyVaultName": {
 				"type": "string",
-				"defaultValue": "kvmsft"
+				"defaultValue": "kvemuiwjfmy5ttf7aepoc"
 			},
 			"datalakeAccountName": {
 				"type": "string",
-				"defaultValue": "adlsmsft"
+				"defaultValue": "dlsemuiwjfmy5ttf7aepoc"
 			}
 		},
 		"folder": {
