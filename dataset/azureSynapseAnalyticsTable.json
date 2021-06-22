@@ -53,5 +53,6 @@
 			},
 			"table": "AggregateTaxiData"
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
 }

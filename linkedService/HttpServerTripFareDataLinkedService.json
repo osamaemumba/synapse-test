@@ -1,5 +1,6 @@
 {
 	"name": "HttpServerTripFareDataLinkedService",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
 		"annotations": [],
 		"type": "HttpServer",

@@ -1,5 +1,6 @@
 {
 	"name": "TripFaresSynapseAnalyticsLinkedService",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
 		"parameters": {
 			"SynapseWorkspaceName": {
@@ -38,6 +39,5 @@
 			"referenceName": "AutoResolveIntegrationRuntime",
 			"type": "IntegrationRuntimeReference"
 		}
-	},
-	"type": "Microsoft.Synapse/workspaces/linkedservices"
+	}
 }

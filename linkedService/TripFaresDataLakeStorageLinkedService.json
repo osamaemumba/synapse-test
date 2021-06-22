@@ -1,5 +1,6 @@
 {
 	"name": "TripFaresDataLakeStorageLinkedService",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
 		"parameters": {
 			"keyVaultName": {
@@ -32,6 +33,5 @@
 			"referenceName": "AutoResolveIntegrationRuntime",
 			"type": "IntegrationRuntimeReference"
 		}
-	},
-	"type": "Microsoft.Synapse/workspaces/linkedservices"
+	}
 }

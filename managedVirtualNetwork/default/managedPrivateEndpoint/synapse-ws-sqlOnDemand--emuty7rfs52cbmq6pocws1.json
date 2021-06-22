@@ -1,0 +1,10 @@
+{
+	"name": "synapse-ws-sqlOnDemand--emuty7rfs52cbmq6pocws1",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/6df48df0-802d-4891-9f31-7cc1879f3cb4/resourceGroups/testsws/providers/Microsoft.Synapse/workspaces/emuty7rfs52cbmq6pocws1",
+		"groupId": "sqlOnDemand",
+		"fqdns": [
+			"emuty7rfs52cbmq6pocws1-ondemand.6aa52e19-cfc8-49a5-9afc-810f8a567eb6.sql.azuresynapse.net"
+		]
+	}
+}

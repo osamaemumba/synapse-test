@@ -291,7 +291,7 @@
 			},
 			"SQLLoginUsername": {
 				"type": "string",
-				"defaultValue": "osama"
+				"defaultValue": "masteruser"
 			},
 			"KeyVaultName": {
 				"type": "string",
@@ -305,6 +305,8 @@
 		"folder": {
 			"name": "TripFaresDataPipeline"
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2021-06-22T12:00:45Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }
