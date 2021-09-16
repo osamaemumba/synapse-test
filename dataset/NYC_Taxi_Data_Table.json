@@ -1,0 +1,12 @@
+{
+	"name": "NYC_Taxi_Data_Table",
+	"properties": {
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [],
+		"sqlPool": {
+			"referenceName": "demoSQLPool",
+			"type": "SqlPoolReference"
+		}
+	}
+}
