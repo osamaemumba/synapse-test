@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "osama-test"
+		},
+		"osama-test-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorageNYCSink_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeNYC_accountKey": {
+			"value": ""
+		},
+		"osama-test-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://osamatestdls.dfs.core.windows.net"
+		},
+		"HttpServerNYCTaxi_properties_typeProperties_url": {
+			"value": "https://nytaxiblob.blob.core.windows.net/"
+		},
+		"AzureDataLakeNYC_properties_typeProperties_url": {
+			"value": "https://dlsbebaz25ks7vlq.dfs.core.windows.net"
+		}
+	}
+}
