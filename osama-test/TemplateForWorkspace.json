@@ -214,7 +214,11 @@
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings",
 												"recursive": true,
-												"enablePartitionDiscovery": false
+												"enablePartitionDiscovery": false,
+												"prefix": {
+													"value": "@{item()}",
+													"type": "Expression"
+												}
 											},
 											"formatSettings": {
 												"type": "DelimitedTextReadSettings"
@@ -458,8 +462,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "*.txt",
-						"folderPath": "2013/Weather",
 						"container": "nyctaxi"
 					},
 					"columnDelimiter": ",",
