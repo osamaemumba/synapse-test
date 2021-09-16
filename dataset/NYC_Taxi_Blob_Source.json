@@ -1,5 +1,5 @@
 {
-	"name": "NYC_Taxi_Blob_Sink",
+	"name": "NYC_Taxi_Blob_Source",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorageNYCSink",
@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"folderPath": "2013/Weather",
 				"container": "nyctaxi"
 			},
 			"columnDelimiter": ",",

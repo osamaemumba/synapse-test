@@ -101,7 +101,6 @@
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
 										"recursive": true,
-										"wildcardFileName": "*",
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
@@ -131,7 +130,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "NYC_Taxi_Blob_Sink",
+									"referenceName": "NYC_Taxi_Blob_Source",
 									"type": "DatasetReference"
 								}
 							],
