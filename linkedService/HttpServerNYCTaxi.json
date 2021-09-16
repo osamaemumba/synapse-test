@@ -4,7 +4,7 @@
 		"type": "HttpServer",
 		"annotations": [],
 		"typeProperties": {
-			"url": "[variables('HttpServerNYCTaxi_properties_typeProperties_url')]",
+			"url": "https://nytaxiblob.blob.core.windows.net/",
 			"enableServerCertificateValidation": false,
 			"authenticationType": "Anonymous"
 		},
