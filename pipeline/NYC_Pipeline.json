@@ -100,11 +100,12 @@
 									"type": "DelimitedTextSource",
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
-										"fileListPath": {
-											"value": "@item()",
+										"recursive": true,
+										"enablePartitionDiscovery": false,
+										"prefix": {
+											"value": "@{item()}",
 											"type": "Expression"
-										},
-										"enablePartitionDiscovery": false
+										}
 									},
 									"formatSettings": {
 										"type": "DelimitedTextReadSettings"
