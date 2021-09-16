@@ -1,0 +1,23 @@
+{
+	"name": "NYC_Taxi_Sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorageNYCSink",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "nyctaxidate",
+				"container": "nyctaxi"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

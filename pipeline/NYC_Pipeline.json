@@ -1,0 +1,146 @@
+{
+	"name": "NYC_Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.RelativeUrl",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "NYC_Data_Copy_Blob",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "NYC_Source_Data",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "NYC_Taxi_Sink",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "NYC_Data_Copy_ADLS",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "NYC_Data_Copy_Blob",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".csv"
+									}
+								},
+								"enableStaging": false
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"RelativeUrl": {
+				"type": "array",
+				"defaultValue": [
+					"2013/Weather/QID6431_20171107_10617_0.txt",
+					"2013/Weather/QID6431_20171107_10617_1.txt",
+					"2013/Weather/QID6431_20171107_10617_2.txt",
+					"2013/Weather/QID6431_20171107_10617_3.txt",
+					"2013/Weather/QID6431_20171107_10617_4.txt",
+					"2013/Weather/QID6431_20171107_10617_5.txt",
+					"2013/Weather/QID6431_20171107_10617_6.txt",
+					"2013/Weather/QID6431_20171107_10617_7.txt",
+					"2013/Weather/QID6431_20171107_10617_8.txt",
+					"2013/Weather/QID6431_20171107_10617_9.txt",
+					"2013/Weather/QID6431_20171107_10617_10.txt"
+				]
+			}
+		},
+		"folder": {
+			"name": "NYC_Taxi_Data_Loading"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-09-16T08:16:50Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
