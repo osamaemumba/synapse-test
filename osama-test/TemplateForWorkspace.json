@@ -300,8 +300,7 @@
 									"value": "IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '[NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]')\nBEGIN\nEXEC('CREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\n    select Count(*) from sys.symmetric_keys;\nEND",
 									"type": "Expression"
 								},
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate"
+								"sqlWriterUseTableLock": false
 							},
 							"enableStaging": false,
 							"translator": {
