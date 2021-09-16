@@ -214,6 +214,7 @@
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings",
 												"recursive": true,
+												"wildcardFolderPath": "2013/Weather",
 												"wildcardFileName": "*",
 												"enablePartitionDiscovery": false
 											},
@@ -244,7 +245,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "NYC_Taxi_Blob_Sink",
+											"referenceName": "NYC_Taxi_Blob_Source",
 											"type": "DatasetReference",
 											"parameters": {}
 										}
@@ -288,6 +289,7 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/NYC_Source_Data')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Source')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_ADLS_Sink')]"
 			]
 		},
@@ -380,7 +382,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"folderPath": "nyctaxidate",
 						"container": "nyctaxi"
 					},
 					"columnDelimiter": ",",
@@ -431,6 +432,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"folderPath": "2013/Weather",
 						"fileSystem": "nyctaxi"
 					},
 					"columnDelimiter": ",",
@@ -442,6 +444,34 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Source')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageNYCSink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "2013/Weather",
+						"container": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageNYCSink')]"
 			]
 		}
 	]
