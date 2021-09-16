@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "*",
+				"fileName": "*.csv",
 				"folderPath": "2013/Weather",
 				"container": "nyctaxi"
 			},
