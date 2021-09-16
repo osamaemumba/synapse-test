@@ -10,8 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "*",
-				"folderPath": "2013/Weather",
 				"fileSystem": "nyctaxi"
 			},
 			"columnDelimiter": ",",

@@ -171,6 +171,8 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
+							"wildcardFolderPath": "2013/Weather",
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -228,7 +230,7 @@
 					"source": {
 						"type": "SqlPoolSource",
 						"sqlReaderQuery": {
-							"value": "IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'NYC_Taxi_Data_Schema')\nBEGIN\nEXEC('CREATE SCHEMA NYC_Taxi_Data_Schema}')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\n    select Count(*) from sys.symmetric_keys;\nEND",
+							"value": "IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'NYC_Taxi_Data_Schema')\nBEGIN\nEXEC('CREATE SCHEMA NYC_Taxi_Data_Schema')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\n    select Count(*) from sys.symmetric_keys;\nEND",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00"
