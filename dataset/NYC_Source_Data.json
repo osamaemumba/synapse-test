@@ -5,11 +5,20 @@
 			"referenceName": "HttpServerNYCTaxi",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"RelativeUrlValue": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "HttpServerLocation"
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@dataset().RelativeUrlValue",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

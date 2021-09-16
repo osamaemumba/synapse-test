@@ -60,7 +60,13 @@
 							"inputs": [
 								{
 									"referenceName": "NYC_Source_Data",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"RelativeUrlValue": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
@@ -98,17 +104,6 @@
 									},
 									"formatSettings": {
 										"type": "DelimitedTextReadSettings"
-									}
-								},
-								"sink": {
-									"type": "DelimitedTextSink",
-									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings"
-									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".csv"
 									}
 								},
 								"enableStaging": false
