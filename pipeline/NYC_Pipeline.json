@@ -71,7 +71,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "NYC_Taxi_Sink",
+									"referenceName": "NYC_Taxi_Blob_Sink",
 									"type": "DatasetReference"
 								}
 							]
@@ -130,7 +130,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "NYC_Taxi_Sink",
+									"referenceName": "NYC_Taxi_Blob_Sink",
 									"type": "DatasetReference"
 								}
 							],

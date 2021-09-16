@@ -1,5 +1,5 @@
 {
-	"name": "NYC_Taxi_Sink",
+	"name": "NYC_Taxi_Blob_Sink",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorageNYCSink",
