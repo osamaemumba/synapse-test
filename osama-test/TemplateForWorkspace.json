@@ -431,7 +431,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "2013/Weather",
 						"fileSystem": "nyctaxi"
 					},
 					"columnDelimiter": ",",
