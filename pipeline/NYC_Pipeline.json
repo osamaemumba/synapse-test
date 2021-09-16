@@ -100,12 +100,11 @@
 									"type": "DelimitedTextSource",
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
-										"recursive": true,
-										"enablePartitionDiscovery": false,
-										"prefix": {
-											"value": "@{item()}",
+										"fileListPath": {
+											"value": "@item()",
 											"type": "Expression"
-										}
+										},
+										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
 										"type": "DelimitedTextReadSettings"
@@ -146,11 +145,11 @@
 							]
 						},
 						{
-							"name": "Copy data1",
+							"name": "NYC_Data_Copy_SQLPool",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Lookup1",
+									"activity": "Create_Schema",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -169,7 +168,10 @@
 									"type": "DelimitedTextSource",
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
-										"recursive": true,
+										"fileListPath": {
+											"value": "@item()",
+											"type": "Expression"
+										},
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
@@ -178,7 +180,8 @@
 								},
 								"sink": {
 									"type": "SqlPoolSink",
-									"sqlWriterUseTableLock": false
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate"
 								},
 								"enableStaging": false,
 								"translator": {
@@ -192,7 +195,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "NYC_Taxi_ADLS_Sink",
+									"referenceName": "NYC_ADLS_Taxi_Source",
 									"type": "DatasetReference"
 								}
 							],
@@ -204,7 +207,7 @@
 							]
 						},
 						{
-							"name": "Lookup1",
+							"name": "Create_Schema",
 							"type": "Lookup",
 							"dependsOn": [
 								{
