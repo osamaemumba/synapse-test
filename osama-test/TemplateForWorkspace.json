@@ -188,178 +188,171 @@
 											"parameters": {}
 										}
 									]
-								},
-								{
-									"name": "NYC_Data_Copy_ADLS",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "NYC_Data_Copy_Blob",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false,
-												"prefix": {
-													"value": "@{item()}",
-													"type": "Expression"
-												}
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "NYC_Taxi_Blob_Source",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "NYC_Taxi_ADLS_Sink",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								},
-								{
-									"name": "NYC_Data_Copy_SQLPool",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Create_Schema",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"fileListPath": {
-													"value": "@item()",
-													"type": "Expression"
-												},
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "SqlPoolSink",
-											"sqlWriterUseTableLock": false,
-											"tableOption": "autoCreate"
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "NYC_ADLS_Taxi_Source",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "NYC_Taxi_Data_Table",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								},
-								{
-									"name": "Create_Schema",
-									"type": "Lookup",
-									"dependsOn": [
-										{
-											"activity": "NYC_Data_Copy_ADLS",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlPoolSource",
-											"sqlReaderQuery": {
-												"value": "IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'NYC_Taxi_Data_Schema')\\nBEGIN\\nEXEC('CREATE SCHEMA NYC_Taxi_Data_Schema}')\\nselect Count(*) from sys.symmetric_keys;\\nEND\\nELSE\\nBEGIN\\n    select Count(*) from sys.symmetric_keys;\\nEND",
-												"type": "Expression"
-											},
-											"queryTimeout": "02:00:00"
-										},
-										"dataset": {
-											"referenceName": "NYC_Taxi_Data_Schema",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									}
 								}
 							]
+						}
+					},
+					{
+						"name": "NYC_Data_Copy_ADLS",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "NYC_Taxi_Blob_Source",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "NYC_Taxi_ADLS_Sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "NYC_Data_Copy_SQLPool",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Create_Schema",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlPoolSink",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "NYC_ADLS_Taxi_Source",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "NYC_Taxi_Data_Table",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Create_Schema",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "NYC_Data_Copy_ADLS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlPoolSource",
+								"sqlReaderQuery": {
+									"value": "IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'NYC_Taxi_Data_Schema')\nBEGIN\nEXEC('CREATE SCHEMA NYC_Taxi_Data_Schema}')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\n    select Count(*) from sys.symmetric_keys;\nEND",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "NYC_Taxi_Data_Schema",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
 						}
 					}
 				],
@@ -388,13 +381,13 @@
 				"lastPublishTime": "2021-09-16T08:16:50Z"
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/NYC_Source_Data')]",
-				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Source')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_ADLS_Sink')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_ADLS_Taxi_Source')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Data_Table')]",
-				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Data_Schema')]"
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Data_Schema')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Source_Data')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink')]"
 			]
 		},
 		{
@@ -564,6 +557,8 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": "*",
+						"folderPath": "2013/Weather",
 						"container": "nyctaxi"
 					},
 					"columnDelimiter": ",",
@@ -639,6 +634,8 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": "*",
+						"folderPath": "2013/Weather",
 						"fileSystem": "nyctaxi"
 					},
 					"columnDelimiter": ",",
