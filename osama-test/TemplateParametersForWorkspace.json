@@ -21,7 +21,10 @@
 			"value": "https://nytaxiblob.blob.core.windows.net/"
 		},
 		"AzureDataLakeNYC_properties_typeProperties_url": {
-			"value": "https://dlsbebaz25ks7vlq.dfs.core.windows.net"
+			"value": "@{linkedService().Datalake_name}"
+		},
+		"KeyVaultLinkedService_properties_typeProperties_baseUrl": {
+			"value": "@{linkedService().Keyvault_Name}"
 		}
 	}
 }

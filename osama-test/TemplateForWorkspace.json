@@ -29,7 +29,11 @@
 		},
 		"AzureDataLakeNYC_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://dlsbebaz25ks7vlq.dfs.core.windows.net"
+			"defaultValue": "@{linkedService().Datalake_name}"
+		},
+		"KeyVaultLinkedService_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "@{linkedService().Keyvault_Name}"
 		}
 	},
 	"variables": {
@@ -185,7 +189,16 @@
 										{
 											"referenceName": "NYC_Taxi_Blob_Sink",
 											"type": "DatasetReference",
-											"parameters": {}
+											"parameters": {
+												"Blobstorage_Name": {
+													"value": "@pipeline().parameters.Blobstorage_Name",
+													"type": "Expression"
+												},
+												"Keyvault_Name": {
+													"value": "@pipeline().parameters.Keyvault_Name",
+													"type": "Expression"
+												}
+											}
 										}
 									]
 								}
@@ -250,14 +263,32 @@
 							{
 								"referenceName": "NYC_Taxi_Blob_Source",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"Blobstorage_Name": {
+										"value": "@pipeline().parameters.Blobstorage_Name",
+										"type": "Expression"
+									},
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "NYC_Taxi_ADLS_Sink",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"Datalake_name": {
+										"value": "@pipeline().parameters.Datalake_Name",
+										"type": "Expression"
+									},
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									}
+								}
 							}
 						]
 					},
@@ -366,7 +397,16 @@
 							{
 								"referenceName": "NYC_ADLS_Taxi_Source",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"Datalake_Name": {
+										"value": "@pipeline().parameters.Datalake_Name",
+										"type": "Expression"
+									},
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
@@ -429,6 +469,15 @@
 							"2013/Weather/QID6431_20171107_10617_9.txt",
 							"2013/Weather/QID6431_20171107_10617_10.txt"
 						]
+					},
+					"Datalake_Name": {
+						"type": "string"
+					},
+					"Blobstorage_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
 					}
 				},
 				"folder": {
@@ -508,6 +557,11 @@
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"parameters": {
+					"Blobstorage_Name": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "AzureBlobStorage",
 				"typeProperties": {
@@ -529,7 +583,21 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "AzureBlobStorageNYCSink",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Blobstorage_Name": {
+							"value": "@dataset().Blobstorage_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Blobstorage_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -554,6 +622,11 @@
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"parameters": {
+					"Datalake_name": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "AzureBlobFS",
 				"typeProperties": {
@@ -579,7 +652,21 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "AzureDataLakeNYC",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Datalake_name": {
+							"value": "@dataset().Datalake_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Datalake_name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -607,7 +694,16 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "AzureBlobStorageNYCSink",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {}
+				},
+				"parameters": {
+					"Blobstorage_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -682,7 +778,16 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "AzureDataLakeNYC",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {}
+				},
+				"parameters": {
+					"Datalake_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -701,6 +806,24 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/KeyVaultLinkedService')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('KeyVaultLinkedService_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
