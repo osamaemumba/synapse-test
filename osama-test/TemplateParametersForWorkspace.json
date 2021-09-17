@@ -5,26 +5,23 @@
 		"workspaceName": {
 			"value": "osama-test"
 		},
-		"osama-test-WorkspaceDefaultSqlServer_connectionString": {
-			"value": ""
-		},
 		"AzureBlobStorageNYCSink_connectionString": {
 			"value": ""
 		},
-		"AzureDataLakeNYC_accountKey": {
+		"osama-test-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
-		},
-		"osama-test-WorkspaceDefaultStorage_properties_typeProperties_url": {
-			"value": "https://osamatestdls.dfs.core.windows.net"
-		},
-		"HttpServerNYCTaxi_properties_typeProperties_url": {
-			"value": "https://nytaxiblob.blob.core.windows.net/"
 		},
 		"AzureDataLakeNYC_properties_typeProperties_url": {
 			"value": "@{linkedService().Datalake_name}"
 		},
+		"HttpServerNYCTaxi_properties_typeProperties_url": {
+			"value": "https://nytaxiblob.blob.core.windows.net/"
+		},
 		"KeyVaultLinkedService_properties_typeProperties_baseUrl": {
 			"value": "@{linkedService().Keyvault_Name}"
+		},
+		"osama-test-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://osamatestdls.dfs.core.windows.net"
 		}
 	}
 }
