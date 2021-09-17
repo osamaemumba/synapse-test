@@ -7,13 +7,13 @@
 			"metadata": "Workspace name",
 			"defaultValue": "osama-test"
 		},
-		"AzureBlobStorageNYCSink_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorageNYCSink'"
-		},
 		"osama-test-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'osama-test-WorkspaceDefaultSqlServer'"
+		},
+		"AzureBlobStorageNYCSink_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "storagekey"
 		},
 		"AzureDataLakeNYC_properties_typeProperties_url": {
 			"type": "string",
@@ -694,8 +694,7 @@
 				"annotations": [],
 				"type": "AzureBlobStorage",
 				"typeProperties": {
-					"connectionString": "[parameters('AzureBlobStorageNYCSink_connectionString')]",
-					"accountKey": {
+					"connectionString": {
 						"type": "AzureKeyVaultSecret",
 						"store": {
 							"referenceName": "KeyVaultLinkedService",
@@ -707,7 +706,7 @@
 								}
 							}
 						},
-						"secretName": "storagekey"
+						"secretName": "[parameters('AzureBlobStorageNYCSink_properties_typeProperties_connectionString_secretName')]"
 					}
 				},
 				"connectVia": {

@@ -5,11 +5,11 @@
 		"workspaceName": {
 			"value": "osama-test"
 		},
-		"AzureBlobStorageNYCSink_connectionString": {
-			"value": ""
-		},
 		"osama-test-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
+		},
+		"AzureBlobStorageNYCSink_properties_typeProperties_connectionString_secretName": {
+			"value": "storagekey"
 		},
 		"AzureDataLakeNYC_properties_typeProperties_url": {
 			"value": "@{linkedService().Datalake_name}"
