@@ -3,7 +3,17 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeNYC",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"Datalake_name": {
+					"value": "@dataset().Datalake_Name",
+					"type": "Expression"
+				},
+				"Keyvault_Name": {
+					"value": "@dataset().Keyvault_Name",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
 			"Datalake_Name": {

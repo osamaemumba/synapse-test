@@ -164,7 +164,7 @@
 						"referenceName": "NYC_Taxi_ADLS_Sink",
 						"type": "DatasetReference",
 						"parameters": {
-							"Datalake_name": {
+							"Datalake_Name": {
 								"value": "@pipeline().parameters.Datalake_Name",
 								"type": "Expression"
 							},
