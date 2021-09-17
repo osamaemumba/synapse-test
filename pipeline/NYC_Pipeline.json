@@ -353,13 +353,16 @@
 				]
 			},
 			"Datalake_Name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "https://dlsbebaz25ks7vlq.dfs.core.windows.net/"
 			},
 			"Blobstorage_Name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "https://sabebaz25ks7vlq.blob.core.windows.net/"
 			},
 			"Keyvault_Name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "https://thekv.vault.azure.net/"
 			}
 		},
 		"folder": {
