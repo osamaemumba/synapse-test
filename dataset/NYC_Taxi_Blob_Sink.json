@@ -27,7 +27,8 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation"
+				"type": "AzureBlobStorageLocation",
+				"container": "nyctaxi"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
