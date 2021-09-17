@@ -142,7 +142,13 @@
 				"outputs": [
 					{
 						"referenceName": "NYC_Taxi_ADLS_Sink",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Datalake_name": {
+								"value": "@pipeline().parameters.Datalake_Name",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
@@ -311,6 +317,12 @@
 					"2013/Weather/QID6431_20171107_10617_9.txt",
 					"2013/Weather/QID6431_20171107_10617_10.txt"
 				]
+			},
+			"Datalake_Name": {
+				"type": "string"
+			},
+			"Blob_Storage": {
+				"type": "string"
 			}
 		},
 		"folder": {
