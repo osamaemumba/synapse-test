@@ -3,7 +3,13 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorageNYCSink",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"Blobstorage_Name": {
+					"value": "@dataset().Blobstorage_Name",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
 			"Blobstorage_Name": {
