@@ -25,7 +25,7 @@
 						}
 					}
 				},
-				"secretName": "dlskey"
+				"secretName": "dlsAccessKey"
 			}
 		},
 		"connectVia": {
