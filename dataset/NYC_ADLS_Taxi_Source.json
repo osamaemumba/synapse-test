@@ -5,6 +5,11 @@
 			"referenceName": "AzureDataLakeNYC",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Datalake_Name": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

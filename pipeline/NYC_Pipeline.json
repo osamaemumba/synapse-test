@@ -72,7 +72,13 @@
 							"outputs": [
 								{
 									"referenceName": "NYC_Taxi_Blob_Sink",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"Blobstorage_Name": {
+											"value": "@pipeline().parameters.Blobstorage_Name",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
@@ -136,7 +142,13 @@
 				"inputs": [
 					{
 						"referenceName": "NYC_Taxi_Blob_Source",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Blobstorage_Name": {
+								"value": "@pipeline().parameters.Blobstorage_Name",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -256,7 +268,13 @@
 				"inputs": [
 					{
 						"referenceName": "NYC_ADLS_Taxi_Source",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Datalake_Name": {
+								"value": "@pipeline().parameters.Datalake_Name",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -321,7 +339,7 @@
 			"Datalake_Name": {
 				"type": "string"
 			},
-			"Blob_Storage": {
+			"Blobstorage_Name": {
 				"type": "string"
 			}
 		},

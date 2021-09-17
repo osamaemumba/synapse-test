@@ -5,6 +5,11 @@
 			"referenceName": "AzureBlobStorageNYCSink",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Blobstorage_Name": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
