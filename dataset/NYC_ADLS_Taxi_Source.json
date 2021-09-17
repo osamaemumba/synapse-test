@@ -8,6 +8,9 @@
 		"parameters": {
 			"Datalake_Name": {
 				"type": "string"
+			},
+			"Keyvault_Name": {
+				"type": "string"
 			}
 		},
 		"annotations": [],

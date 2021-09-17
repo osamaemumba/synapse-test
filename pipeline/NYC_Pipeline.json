@@ -77,6 +77,10 @@
 										"Blobstorage_Name": {
 											"value": "@pipeline().parameters.Blobstorage_Name",
 											"type": "Expression"
+										},
+										"Keyvault_Name": {
+											"value": "@pipeline().parameters.Keyvault_Name",
+											"type": "Expression"
 										}
 									}
 								}
@@ -147,6 +151,10 @@
 							"Blobstorage_Name": {
 								"value": "@pipeline().parameters.Blobstorage_Name",
 								"type": "Expression"
+							},
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
 							}
 						}
 					}
@@ -158,6 +166,10 @@
 						"parameters": {
 							"Datalake_name": {
 								"value": "@pipeline().parameters.Datalake_Name",
+								"type": "Expression"
+							},
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
 								"type": "Expression"
 							}
 						}
@@ -273,6 +285,10 @@
 							"Datalake_Name": {
 								"value": "@pipeline().parameters.Datalake_Name",
 								"type": "Expression"
+							},
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
 							}
 						}
 					}
@@ -340,6 +356,9 @@
 				"type": "string"
 			},
 			"Blobstorage_Name": {
+				"type": "string"
+			},
+			"Keyvault_Name": {
 				"type": "string"
 			}
 		},
