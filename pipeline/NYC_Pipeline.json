@@ -358,7 +358,7 @@
 			},
 			"Blobstorage_Name": {
 				"type": "string",
-				"defaultValue": "sabebaz25ks7vlq"
+				"defaultValue": "testsaosama"
 			},
 			"Keyvault_Name": {
 				"type": "string",
