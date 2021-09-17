@@ -1,6 +1,5 @@
 {
 	"name": "AzureBlobStorageNYCSink",
-	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
 		"parameters": {
 			"Blobstorage_Name": {
@@ -13,8 +12,7 @@
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
-			"connectionString": "DefaultEndpointsProtocol=https;AccountName=@{linkedService().Blobstorage_Name};EndpointSuffix=core.windows.net;",
-			"accountKey": {
+			"connectionString": {
 				"type": "AzureKeyVaultSecret",
 				"store": {
 					"referenceName": "KeyVaultLinkedService",
@@ -33,5 +31,6 @@
 			"referenceName": "AutoResolveIntegrationRuntime",
 			"type": "IntegrationRuntimeReference"
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/linkedservices"
 }
