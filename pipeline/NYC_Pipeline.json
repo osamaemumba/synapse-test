@@ -299,7 +299,7 @@
 						"referenceName": "NYC_Taxi_Data_Table",
 						"type": "DatasetReference",
 						"parameters": {
-							"KeyVault_Name": {
+							"Keyvault_Name": {
 								"value": "@pipeline().parameters.Keyvault_Name",
 								"type": "Expression"
 							},

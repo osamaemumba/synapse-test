@@ -3,10 +3,24 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SynapseAnalyticsSQLPoolLinkedservice",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"SQLLoginUsername": {
+					"value": "@dataset().SQLLoginUsername",
+					"type": "Expression"
+				},
+				"KeyVault_Name": {
+					"value": "@dataset().KeyVault_Name",
+					"type": "Expression"
+				},
+				"ServerFQDN": {
+					"value": "@dataset().ServerFQDN",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
-			"KeyVault_Name": {
+			"Keyvault_Name": {
 				"type": "string"
 			},
 			"SQLLoginUsername": {
