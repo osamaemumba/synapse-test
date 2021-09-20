@@ -1,0 +1,39 @@
+{
+	"name": "SynapseAnalyticsSQLPoolLinkedservice",
+	"properties": {
+		"parameters": {
+			"SQLLoginUsername": {
+				"type": "string"
+			},
+			"KeyVaultName": {
+				"type": "string"
+			},
+			"ServerFQDN": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().ServerFQDN};Initial Catalog=demoSQLPool;User ID=@{linkedService().SQLLoginUsername}",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "KeyVaultLinkedService",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Keyvault_Name": {
+							"value": "@linkedService().KeyVaultName",
+							"type": "Expression"
+						}
+					}
+				},
+				"secretName": "SQLLoginPassword"
+			}
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
