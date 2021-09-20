@@ -9,8 +9,8 @@
 					"value": "@dataset().SQLLoginUsername",
 					"type": "Expression"
 				},
-				"KeyVault_Name": {
-					"value": "@dataset().KeyVault_Name",
+				"Keyvault_Name": {
+					"value": "@dataset().Keyvault_Name",
 					"type": "Expression"
 				},
 				"ServerFQDN": {
