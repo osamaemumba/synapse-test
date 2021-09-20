@@ -3,7 +3,32 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SynapseAnalyticsSQLPoolLinkedservice",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"SQLLoginUsername": {
+					"value": "@dataset().SQLLoginUsername",
+					"type": "Expression"
+				},
+				"Keyvault_Name": {
+					"value": "@dataset().Keyvault_Name",
+					"type": "Expression"
+				},
+				"ServerFQDN": {
+					"value": "@dataset().ServerFQDN",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"SQLLoginUsername": {
+				"type": "string"
+			},
+			"ServerFQDN": {
+				"type": "string"
+			},
+			"Keyvault_Name": {
+				"type": "string"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
