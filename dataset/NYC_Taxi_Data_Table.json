@@ -1,0 +1,23 @@
+{
+	"name": "NYC_Taxi_Data_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SynapseAnalyticsSQLPoolLinkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"KeyVault_Name": {
+				"type": "string"
+			},
+			"SQLLoginUsername": {
+				"type": "string"
+			},
+			"ServerFQDN": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": []
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"name": "NYC_Taxi_Data_Schema",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SynapseAnalyticsSQLPoolLinkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": []
+	}
+}
