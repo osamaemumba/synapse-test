@@ -385,7 +385,8 @@
 				"defaultValue": "osama"
 			},
 			"ServerFQDN": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "osama-test.database.windows.net"
 			}
 		},
 		"folder": {
