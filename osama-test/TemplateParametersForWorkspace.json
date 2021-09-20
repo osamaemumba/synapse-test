@@ -5,6 +5,9 @@
 		"workspaceName": {
 			"value": "osama-test"
 		},
+		"SynapseAnalyticsSQLPoolLinkedservice_connectionString": {
+			"value": ""
+		},
 		"osama-test-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},
