@@ -32,6 +32,10 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": "NYC_Taxi_Data_Schema",
+			"table": "NYC_Taxi_Data_Table"
+		}
 	}
 }
