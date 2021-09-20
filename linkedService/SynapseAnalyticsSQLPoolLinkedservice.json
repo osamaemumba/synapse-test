@@ -5,7 +5,7 @@
 			"SQLLoginUsername": {
 				"type": "string"
 			},
-			"KeyVault_Name": {
+			"Keyvault_Name": {
 				"type": "string"
 			},
 			"ServerFQDN": {
@@ -20,7 +20,13 @@
 				"type": "AzureKeyVaultSecret",
 				"store": {
 					"referenceName": "KeyVaultLinkedService",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Keyvault_Name": {
+							"value": "@linkedService().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
 				},
 				"secretName": "SQLLoginPassword"
 			}
