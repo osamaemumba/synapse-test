@@ -383,23 +383,23 @@
 			},
 			"Datalake_Name": {
 				"type": "string",
-				"defaultValue": "https://dlsbebaz25ks7vlq.dfs.core.windows.net/"
+				"defaultValue": "https://<>.dfs.core.windows.net/"
 			},
 			"Blobstorage_Name": {
 				"type": "string",
-				"defaultValue": "testsaosama"
+				"defaultValue": "<>"
 			},
 			"Keyvault_Name": {
 				"type": "string",
-				"defaultValue": "https://thekv.vault.azure.net/"
+				"defaultValue": "https://<>.vault.azure.net/"
 			},
 			"SQLLoginUsername": {
 				"type": "string",
-				"defaultValue": "osama"
+				"defaultValue": "<>"
 			},
 			"ServerFQDN": {
 				"type": "string",
-				"defaultValue": "osama-test.database.windows.net"
+				"defaultValue": "<>.windows.net"
 			}
 		},
 		"folder": {
