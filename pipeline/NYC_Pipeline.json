@@ -382,24 +382,19 @@
 				]
 			},
 			"Datalake_Name": {
-				"type": "string",
-				"defaultValue": "https://<>.dfs.core.windows.net/"
+				"type": "string"
 			},
 			"Blobstorage_Name": {
-				"type": "string",
-				"defaultValue": "<>"
+				"type": "string"
 			},
 			"Keyvault_Name": {
-				"type": "string",
-				"defaultValue": "https://<>.vault.azure.net/"
+				"type": "string"
 			},
 			"SQLLoginUsername": {
-				"type": "string",
-				"defaultValue": "<>"
+				"type": "string"
 			},
 			"ServerFQDN": {
-				"type": "string",
-				"defaultValue": "<>.database.windows.net"
+				"type": "string"
 			}
 		},
 		"folder": {
