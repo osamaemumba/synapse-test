@@ -447,7 +447,7 @@
 					},
 					"ServerFQDN": {
 						"type": "string",
-						"defaultValue": "<>.windows.net"
+						"defaultValue": "<>.database.windows.net"
 					}
 				},
 				"folder": {
