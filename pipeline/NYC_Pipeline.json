@@ -382,19 +382,24 @@
 				]
 			},
 			"Datalake_Name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "<adls>"
 			},
 			"Blobstorage_Name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "<sa>"
 			},
 			"Keyvault_Name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "<kv>"
 			},
 			"SQLLoginUsername": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "<sqllogin>"
 			},
 			"ServerFQDN": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "<server>"
 			}
 		},
 		"folder": {
