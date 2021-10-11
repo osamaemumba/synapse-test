@@ -76,10 +76,12 @@
 		],
 		"parameters": {
 			"Purview_Account_Name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "purview-for-synapse-test-account-2"
 			},
 			"ServerFQDN": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "osama-test.sql.azuresynapse.net"
 			}
 		},
 		"folder": {
