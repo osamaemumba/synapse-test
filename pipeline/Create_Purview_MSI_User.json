@@ -58,7 +58,20 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[createPurviewUserSp]"
+				},
+				"linkedServiceName": {
+					"referenceName": "purviewUserSynaseLinkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"ServerFQDN": {
+							"value": "@pipeline().parameters.ServerFQDN",
+							"type": "Expression"
+						}
+					}
+				}
 			}
 		],
 		"parameters": {
