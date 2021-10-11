@@ -3,7 +3,13 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "purviewUserSynaseLinkedservice",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"ServerFQDN": {
+					"value": "@dataset().ServerFQDN",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
 			"Purview_Account_Name": {
