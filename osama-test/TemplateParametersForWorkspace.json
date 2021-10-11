@@ -11,6 +11,9 @@
 		"osama-test-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},
+		"purviewUserSynaseLinkedservice_connectionString": {
+			"value": ""
+		},
 		"AzureBlobStorageNYCSink_properties_typeProperties_connectionString_secretName": {
 			"value": "blobConnectionString"
 		},
