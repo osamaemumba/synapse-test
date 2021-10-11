@@ -1,0 +1,20 @@
+{
+	"name": "purviewUserSynapseDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "purviewUserSynaseLinkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Purview_Account_Name": {
+				"type": "string"
+			},
+			"ServerFQDN": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": []
+	}
+}

@@ -1,0 +1,73 @@
+{
+	"name": "Create_Purview_MSI_User",
+	"properties": {
+		"activities": [
+			{
+				"name": "Create Purview User Stored Procedure",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "purviewUserSynapseDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"Purview_Account_Name": {
+								"value": "@pipeline().parameters.Purview_Account_Name",
+								"type": "Expression"
+							},
+							"ServerFQDN": {
+								"value": "@pipeline().parameters.ServerFQDN",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Purview User Stored Procedure",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Create Purview User Stored Procedure",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			}
+		],
+		"parameters": {
+			"Purview_Account_Name": {
+				"type": "string"
+			},
+			"ServerFQDN": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Create_Purview_MSI_User"
+		},
+		"annotations": []
+	}
+}
