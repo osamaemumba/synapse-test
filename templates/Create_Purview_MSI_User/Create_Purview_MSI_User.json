@@ -1,0 +1,142 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "osama-test"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/Create_Purview_MSI_User')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Create Purview User Stored Procedure",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": {
+									"value": "IF NOT EXISTS (SELECT * FROM sys.procedures WHERE name = 'createPurviewUserSp')\nBEGIN\nEXEC('CREATE PROCEDURE createPurviewUserSp\nAS\nCREATE USER [@{pipeline().parameters.Purview_Account_Name}] FROM EXTERNAL PROVIDER\nEXEC sp_addrolemember [db_datareader], [@{pipeline().parameters.Purview_Account_Name}]')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\n    select Count(*) from sys.symmetric_keys;\nEND",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "purviewUserSynapseDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"Purview_Account_Name": {
+										"value": "@pipeline().parameters.Purview_Account_Name",
+										"type": "Expression"
+									},
+									"ServerFQDN": {
+										"value": "@pipeline().parameters.ServerFQDN",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					},
+					{
+						"name": "Execute Purview User Stored Procedure",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Create Purview User Stored Procedure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[dbo].[createPurviewUserSp]"
+						},
+						"linkedServiceName": {
+							"referenceName": "purviewUserSynaseLinkedservice",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"ServerFQDN": {
+									"value": "@pipeline().parameters.ServerFQDN",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"parameters": {
+					"Purview_Account_Name": {
+						"type": "string",
+						"defaultValue": "<purview>"
+					},
+					"ServerFQDN": {
+						"type": "string",
+						"defaultValue": "<server>"
+					}
+				},
+				"folder": {
+					"name": "Create_Purview_MSI_User"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/purviewUserSynapseDataset')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/purviewUserSynapseDataset')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "purviewUserSynaseLinkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"ServerFQDN": {
+							"value": "@dataset().ServerFQDN",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Purview_Account_Name": {
+						"type": "string"
+					},
+					"ServerFQDN": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": []
+			},
+			"dependsOn": []
+		}
+	]
+}
