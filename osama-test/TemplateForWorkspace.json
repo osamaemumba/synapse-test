@@ -362,7 +362,7 @@
 							"sink": {
 								"type": "SqlDWSink",
 								"preCopyScript": {
-									"value": "IF OBJECT_ID('[NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]', 'U') IS NOT NULL\nBEGIN\nEXEC('DROP TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL\n)\nselect Count(*) from sys.symmetric_keys;\nEND",
+									"value": "IF OBJECT_ID('[NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]', 'U') IS NOT NULL \nBEGIN\nEXEC('DROP TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL\n)\nselect Count(*) from sys.symmetric_keys;\nEND",
 									"type": "Expression"
 								},
 								"disableMetricsCollection": false
