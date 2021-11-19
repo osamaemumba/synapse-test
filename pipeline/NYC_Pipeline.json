@@ -201,7 +201,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "2013/Weather",
+							"wildcardFolderPath": "2013/Geography",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
@@ -671,7 +671,19 @@
 			},
 			"RelativeUrl_Geo": {
 				"type": "array",
-				"defaultValue": "[\"2013/Geography/QID6415_20171107_10448_0.txt\",\"2013/Geography/QID6415_20171107_10448_1.txt\",\"2013/Geography/QID6415_20171107_10448_2.txt\",\"2013/Geography/QID6415_20171107_10448_3.txt\",\"2013/Geography/QID6415_20171107_10448_4.txt\",\"2013/Geography/QID6415_20171107_10448_5.txt\",\"2013/Geography/QID6415_20171107_10448_6.txt\",\"2013/Geography/QID6415_20171107_10448_7.txt\",\"2013/Geography/QID6415_20171107_10448_8.txt\",\"2013/Geography/QID6415_20171107_10448_9.txt\",\"\"2013/Geography/QID6415_20171107_10448_10.txt\"\"]"
+				"defaultValue": [
+					"2013/Geography/QID6415_20171107_10448_0.txt",
+					"2013/Geography/QID6415_20171107_10448_1.txt",
+					"2013/Geography/QID6415_20171107_10448_2.txt",
+					"2013/Geography/QID6415_20171107_10448_3.txt",
+					"2013/Geography/QID6415_20171107_10448_4.txt",
+					"2013/Geography/QID6415_20171107_10448_5.txt",
+					"2013/Geography/QID6415_20171107_10448_6.txt",
+					"2013/Geography/QID6415_20171107_10448_7.txt",
+					"2013/Geography/QID6415_20171107_10448_8.txt",
+					"2013/Geography/QID6415_20171107_10448_9.txt",
+					"2013/Geography/QID6415_20171107_10448_10.txt"
+				]
 			}
 		},
 		"folder": {
