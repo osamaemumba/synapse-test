@@ -201,7 +201,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "2013/Geography",
+							"wildcardFolderPath": "2013/Weather",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
@@ -568,7 +568,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "2013/Weather",
+							"wildcardFolderPath": "2013/Geography",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
