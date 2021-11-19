@@ -153,7 +153,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "ForEach1",
+						"name": "ForEach_Weather",
 						"type": "ForEach",
 						"dependsOn": [],
 						"userProperties": [],
@@ -164,7 +164,7 @@
 							},
 							"activities": [
 								{
-									"name": "NYC_Data_Copy_Blob",
+									"name": "NYC_Weather_Data_Copy_Blob",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -240,11 +240,11 @@
 						}
 					},
 					{
-						"name": "NYC_Data_Copy_ADLS",
+						"name": "NYC_Weather_Data_Copy_ADLS",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "ForEach1",
+								"activity": "ForEach_Weather",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -327,7 +327,7 @@
 						]
 					},
 					{
-						"name": "NYC_Data_Copy_SQLPool",
+						"name": "NYC_Weather_Data_Copy_SQLPool",
 						"type": "Copy",
 						"dependsOn": [
 							{
@@ -362,7 +362,7 @@
 							"sink": {
 								"type": "SqlDWSink",
 								"preCopyScript": {
-									"value": "IF OBJECT_ID('[NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]', 'U') IS NOT NULL \nBEGIN\nEXEC('DROP TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL\n)\nselect Count(*) from sys.symmetric_keys;\nEND",
+									"value": "IF OBJECT_ID('[NYC_Taxi_Data_Schema].[NYC_Taxi_Weather_Data_Table]', 'U') IS NOT NULL \nBEGIN\nEXEC('DROP TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Weather_Data_Table]\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Weather_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Weather_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL\n)\nselect Count(*) from sys.symmetric_keys;\nEND",
 									"type": "Expression"
 								},
 								"disableMetricsCollection": false
@@ -469,7 +469,13 @@
 						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "NYC_Data_Copy_ADLS",
+								"activity": "NYC_Weather_Data_Copy_ADLS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "NYC_Geo_Data_Copy_ADLS",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -512,6 +518,340 @@
 								}
 							}
 						}
+					},
+					{
+						"name": "ForEach_Geo",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.RelativeUrl_Geo",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "NYC_Geo_Data_Copy_Blob_Geo",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "GET"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".csv"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "NYC_Source_Data_Geo",
+											"type": "DatasetReference",
+											"parameters": {
+												"RelativeUrlValue": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "NYC_Taxi_Blob_Sink_Geo",
+											"type": "DatasetReference",
+											"parameters": {
+												"Blobstorage_Name": {
+													"value": "@pipeline().parameters.Blobstorage_Name",
+													"type": "Expression"
+												},
+												"Keyvault_Name": {
+													"value": "@pipeline().parameters.Keyvault_Name",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "NYC_Geo_Data_Copy_ADLS",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach_Geo",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "2013/Geography",
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "NYC_Taxi_Blob_Source_Geo",
+								"type": "DatasetReference",
+								"parameters": {
+									"Blobstorage_Name": {
+										"value": "@pipeline().parameters.Blobstorage_Name",
+										"type": "Expression"
+									},
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "NYC_Taxi_ADLS_Sink_Geo",
+								"type": "DatasetReference",
+								"parameters": {
+									"Datalake_Name": {
+										"value": "@pipeline().parameters.Datalake_Name",
+										"type": "Expression"
+									},
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "NYC_Geo_Data_Copy_SQLPool",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Create_Schema",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "2013/Geography",
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"preCopyScript": {
+									"value": "IF OBJECT_ID('[NYC_Taxi_Data_Schema].[NYC_Taxi_Geo_Data_Table]', 'U') IS NOT NULL \nBEGIN\nEXEC('DROP TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Geo_Data_Table]\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Geo_Data_Table]\n(\n    [GeographyID] int NOT NULL,\n    [ZipCodeBKey] varchar(10) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,\n    [County] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [City] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [State] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [Country] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [ZipCode] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Geo_Data_Table]\n(\n    [GeographyID] int NOT NULL,\n    [ZipCodeBKey] varchar(10) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,\n    [County] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [City] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [State] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [Country] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [ZipCode] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL\n)\nselect Count(*) from sys.symmetric_keys;\nEND",
+									"type": "Expression"
+								},
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"ordinal": 1
+										},
+										"sink": {
+											"name": "GeographyID",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 2
+										},
+										"sink": {
+											"name": "ZipCodeBKey",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 3
+										},
+										"sink": {
+											"name": "County",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 4
+										},
+										"sink": {
+											"name": "City",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 5
+										},
+										"sink": {
+											"name": "State",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 6
+										},
+										"sink": {
+											"name": "Country",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 7
+										},
+										"sink": {
+											"name": "ZipCode",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "NYC_ADLS_Taxi_Source_Geo",
+								"type": "DatasetReference",
+								"parameters": {
+									"Datalake_Name": {
+										"value": "@pipeline().parameters.Datalake_Name",
+										"type": "Expression"
+									},
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "NYC_Taxi_Data_Table_Geo",
+								"type": "DatasetReference",
+								"parameters": {
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									},
+									"SQLLoginUsername": {
+										"value": "@pipeline().parameters.SQLLoginUsername",
+										"type": "Expression"
+									},
+									"ServerFQDN": {
+										"value": "@pipeline().parameters.ServerFQDN",
+										"type": "Expression"
+									}
+								}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -554,6 +894,22 @@
 					"ServerFQDN": {
 						"type": "string",
 						"defaultValue": "<server>"
+					},
+					"RelativeUrl_Geo": {
+						"type": "array",
+						"defaultValue": [
+							"2013/Geography/QID6415_20171107_10448_0.txt",
+							"2013/Geography/QID6415_20171107_10448_1.txt",
+							"2013/Geography/QID6415_20171107_10448_2.txt",
+							"2013/Geography/QID6415_20171107_10448_3.txt",
+							"2013/Geography/QID6415_20171107_10448_4.txt",
+							"2013/Geography/QID6415_20171107_10448_5.txt",
+							"2013/Geography/QID6415_20171107_10448_6.txt",
+							"2013/Geography/QID6415_20171107_10448_7.txt",
+							"2013/Geography/QID6415_20171107_10448_8.txt",
+							"2013/Geography/QID6415_20171107_10448_9.txt",
+							"2013/Geography/QID6415_20171107_10448_10.txt"
+						]
 					}
 				},
 				"folder": {
@@ -568,8 +924,14 @@
 				"[concat(variables('workspaceId'), '/datasets/NYC_ADLS_Taxi_Source')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Data_Table')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Data_Schema')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Source_Geo')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_ADLS_Sink_Geo')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_ADLS_Taxi_Source_Geo')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Data_Table_Geo')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Source_Data')]",
-				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink')]"
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Source_Data_Geo')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink_Geo')]"
 			]
 		},
 		{
@@ -870,7 +1232,7 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "NYC_Taxi_Data_Schema",
-					"table": "NYC_Taxi_Data_Table"
+					"table": "NYC_Taxi_Weather_Data_Table"
 				}
 			},
 			"dependsOn": [
@@ -1179,11 +1541,272 @@
 			"properties": {
 				"collation": "SQL_Latin1_General_CP1_CI_AS",
 				"maxSizeBytes": 263882790666240,
-				"restorePointInTime": "0001-01-01T00:00:00",
 				"annotations": []
 			},
 			"dependsOn": [],
 			"location": "eastus2"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Sink_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageNYCSink",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Blobstorage_Name": {
+							"value": "@dataset().Blobstorage_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Blobstorage_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageNYCSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Source_Data_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HttpServerNYCTaxi",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"RelativeUrlValue": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "@dataset().RelativeUrlValue",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/HttpServerNYCTaxi')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Source_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageNYCSink",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Blobstorage_Name": {
+							"value": "@dataset().Blobstorage_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Blobstorage_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageNYCSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_ADLS_Sink_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeNYC",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Datalake_name": {
+							"value": "@dataset().Datalake_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Datalake_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "2013/Geography",
+						"fileSystem": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_ADLS_Taxi_Source_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeNYC",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Datalake_name": {
+							"value": "@dataset().Datalake_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Datalake_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Data_Table_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SynapseAnalyticsSQLPoolLinkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"SQLLoginUsername": {
+							"value": "@dataset().SQLLoginUsername",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						},
+						"ServerFQDN": {
+							"value": "@dataset().ServerFQDN",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Keyvault_Name": {
+						"type": "string"
+					},
+					"SQLLoginUsername": {
+						"type": "string"
+					},
+					"ServerFQDN": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "NYC_Taxi_Data_Schema",
+					"table": "NYC_Taxi_Geo_Data_Table"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/SynapseAnalyticsSQLPoolLinkedservice')]"
+			]
 		}
 	]
 }
