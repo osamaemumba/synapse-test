@@ -542,6 +542,144 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "NYC_Geo_Data_Copy_SQLPool",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create_Schema",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "2013/Weather",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": {
+							"value": "IF OBJECT_ID('[NYC_Taxi_Data_Schema].[NYC_Taxi_Geo_Data_Table]', 'U') IS NOT NULL \nBEGIN\nEXEC('DROP TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Geo_Data_Table]\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Geo_Data_Table]\n(\n    [GeographyID] int NOT NULL,\n    [ZipCodeBKey] varchar(10) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,\n    [County] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [City] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [State] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [Country] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [ZipCode] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Geo_Data_Table]\n(\n    [GeographyID] int NOT NULL,\n    [ZipCodeBKey] varchar(10) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,\n    [County] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [City] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [State] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [Country] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [ZipCode] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL\n)\nselect Count(*) from sys.symmetric_keys;\nEND",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"type": "String",
+									"physicalType": "String",
+									"ordinal": 1
+								},
+								"sink": {
+									"name": "DateID",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"type": "String",
+									"physicalType": "String",
+									"ordinal": 2
+								},
+								"sink": {
+									"name": "GeographyID",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"type": "String",
+									"physicalType": "String",
+									"ordinal": 3
+								},
+								"sink": {
+									"name": "PrecipitationInches",
+									"type": "Single",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"type": "String",
+									"physicalType": "String",
+									"ordinal": 4
+								},
+								"sink": {
+									"name": "AvgTemperatureFahrenheit",
+									"type": "Single",
+									"physicalType": "float"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "NYC_ADLS_Taxi_Source_Geo",
+						"type": "DatasetReference",
+						"parameters": {
+							"Datalake_Name": {
+								"value": "@pipeline().parameters.Datalake_Name",
+								"type": "Expression"
+							},
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "NYC_Taxi_Data_Table_Geo",
+						"type": "DatasetReference",
+						"parameters": {
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
+							},
+							"SQLLoginUsername": {
+								"value": "@pipeline().parameters.SQLLoginUsername",
+								"type": "Expression"
+							},
+							"ServerFQDN": {
+								"value": "@pipeline().parameters.ServerFQDN",
+								"type": "Expression"
+							}
+						}
+					}
+				]
 			}
 		],
 		"parameters": {
