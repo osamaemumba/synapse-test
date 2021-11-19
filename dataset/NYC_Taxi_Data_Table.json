@@ -35,7 +35,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "NYC_Taxi_Data_Schema",
-			"table": "NYC_Taxi_Data_Table"
+			"table": "NYC_Taxi_Weather_Data_Table"
 		}
 	}
 }
