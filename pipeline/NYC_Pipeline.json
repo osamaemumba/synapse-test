@@ -766,7 +766,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "NYC_Source_Data_Trip",
+									"referenceName": "NYC_Source_Data_Time",
 									"type": "DatasetReference",
 									"parameters": {
 										"RelativeUrlValue": {
@@ -778,7 +778,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "NYC_Taxi_Blob_Sink_Trip",
+									"referenceName": "NYC_Taxi_Blob_Sink_Time",
 									"type": "DatasetReference",
 									"parameters": {
 										"Blobstorage_Name": {
@@ -852,7 +852,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "NYC_Taxi_Blob_Source_Trip",
+						"referenceName": "NYC_Taxi_Blob_Source_Time",
 						"type": "DatasetReference",
 						"parameters": {
 							"Blobstorage_Name": {
@@ -868,7 +868,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "NYC_Taxi_ADLS_Sink_Trip",
+						"referenceName": "NYC_Taxi_ADLS_Sink_Time",
 						"type": "DatasetReference",
 						"parameters": {
 							"Datalake_Name": {
@@ -927,6 +927,80 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"ordinal": 1
+								},
+								"sink": {
+									"name": "TimeID"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 2
+								},
+								"sink": {
+									"name": "TimeBKey"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 3
+								},
+								"sink": {
+									"name": "HourNumber"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 4
+								},
+								"sink": {
+									"name": "MinuteNumber"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 5
+								},
+								"sink": {
+									"name": "SecondNumber"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 6
+								},
+								"sink": {
+									"name": "TimeInSecond"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 7
+								},
+								"sink": {
+									"name": "HourlyBucket"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 8
+								},
+								"sink": {
+									"name": "DayTimeBucketGroupKey"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 9
+								},
+								"sink": {
+									"name": "DayTimeBucket"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
@@ -936,7 +1010,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "NYC_ADLS_Taxi_Source_Trip",
+						"referenceName": "NYC_ADLS_Taxi_Source_Time",
 						"type": "DatasetReference",
 						"parameters": {
 							"Datalake_Name": {
@@ -952,7 +1026,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "NYC_Taxi_Data_Table_Trip",
+						"referenceName": "NYC_Taxi_Data_Table_Time",
 						"type": "DatasetReference",
 						"parameters": {
 							"Keyvault_Name": {
