@@ -789,6 +789,93 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "NYC_Trip_Data_Copy_ADLS",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ForEach_Trip",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "2013/Trip",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".csv"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "NYC_Taxi_Blob_Source_Trip",
+						"type": "DatasetReference",
+						"parameters": {
+							"Blobstorage_Name": {
+								"value": "@pipeline().parameters.Blobstorage_Name",
+								"type": "Expression"
+							},
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "NYC_Taxi_ADLS_Sink_Geo",
+						"type": "DatasetReference",
+						"parameters": {
+							"Datalake_Name": {
+								"value": "@pipeline().parameters.Datalake_Name",
+								"type": "Expression"
+							},
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
+							}
+						}
+					}
+				]
 			}
 		],
 		"parameters": {
