@@ -329,6 +329,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "NYC_Trip_Data_Copy_ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"policy": {
@@ -871,6 +877,166 @@
 							},
 							"Keyvault_Name": {
 								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "NYC_Trip_Data_Copy_SQLPool",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create_Schema",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "2013/Trip",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": {
+							"value": "IF OBJECT_ID('[NYC_Taxi_Data_Schema].[NYC_Taxi_Trip_Data_Table]', 'U') IS NOT NULL \nBEGIN\nEXEC('DROP TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Trip_Data_Table]\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Trip_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [MedallionID] int NOT NULL,\n    [HackneyLicenseID] int NOT NULL,\n    [PickupTimeID] int NOT NULL,\n    [DropoffTimeID] int NOT NULL,\n    [PickupGeographyID] int NULL,\n    [DropoffGeographyID] int NULL,\n    [PickupLatitude] float NULL,\n    [PickupLongitude] float NULL,\n    [PickupLatLong] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [DropoffLatitude] float NULL,\n    [DropoffLongitude] float NULL,\n    [DropoffLatLong] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [PassengerCount] int NULL,\n    [TripDurationSeconds] int NULL,\n    [TripDistanceMiles] float NULL,\n    [PaymentType] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [FareAmount] money NULL,\n    [SurchargeAmount] money NULL,\n    [TaxAmount] money NULL,\n    [TipAmount] money NULL,\n    [TollsAmount] money NULL,\n    [TotalAmount] money NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Trip_Data_Table]\n(\n    [DateID] int NOT NULL,\n    [MedallionID] int NOT NULL,\n    [HackneyLicenseID] int NOT NULL,\n    [PickupTimeID] int NOT NULL,\n    [DropoffTimeID] int NOT NULL,\n    [PickupGeographyID] int NULL,\n    [DropoffGeographyID] int NULL,\n    [PickupLatitude] float NULL,\n    [PickupLongitude] float NULL,\n    [PickupLatLong] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [DropoffLatitude] float NULL,\n    [DropoffLongitude] float NULL,\n    [DropoffLatLong] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [PassengerCount] int NULL,\n    [TripDurationSeconds] int NULL,\n    [TripDistanceMiles] float NULL,\n    [PaymentType] varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n    [FareAmount] money NULL,\n    [SurchargeAmount] money NULL,\n    [TaxAmount] money NULL,\n    [TipAmount] money NULL,\n    [TollsAmount] money NULL,\n    [TotalAmount] money NULL\n)\nselect Count(*) from sys.symmetric_keys;\nEND",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"ordinal": 1
+								},
+								"sink": {
+									"name": "GeographyID",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 2
+								},
+								"sink": {
+									"name": "ZipCodeBKey",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 3
+								},
+								"sink": {
+									"name": "County",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 4
+								},
+								"sink": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 5
+								},
+								"sink": {
+									"name": "State",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 6
+								},
+								"sink": {
+									"name": "Country",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"ordinal": 7
+								},
+								"sink": {
+									"name": "ZipCode",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "NYC_ADLS_Taxi_Source_Trip",
+						"type": "DatasetReference",
+						"parameters": {
+							"Datalake_Name": {
+								"value": "@pipeline().parameters.Datalake_Name",
+								"type": "Expression"
+							},
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "NYC_Taxi_Data_Table_Trip",
+						"type": "DatasetReference",
+						"parameters": {
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
+							},
+							"SQLLoginUsername": {
+								"value": "@pipeline().parameters.SQLLoginUsername",
+								"type": "Expression"
+							},
+							"ServerFQDN": {
+								"value": "@pipeline().parameters.ServerFQDN",
 								"type": "Expression"
 							}
 						}
