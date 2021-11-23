@@ -721,7 +721,7 @@
 					},
 					"activities": [
 						{
-							"name": "NYC_Geo_Data_Copy_Blob_Trip",
+							"name": "NYC_Geo_Data_Copy_Blob_Time",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
