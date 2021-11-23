@@ -710,12 +710,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@pipeline().parameters.RelativeUrl_Geo",
+						"value": "@pipeline().parameters.RelativeUrl_Trip",
 						"type": "Expression"
 					},
 					"activities": [
 						{
-							"name": "NYC_Geo_Data_Copy_Blob_Geo_copy1",
+							"name": "NYC_Geo_Data_Copy_Blob_Trip",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -760,7 +760,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "NYC_Source_Data_Geo",
+									"referenceName": "NYC_Source_Data_Trip",
 									"type": "DatasetReference",
 									"parameters": {
 										"RelativeUrlValue": {
@@ -772,7 +772,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "NYC_Taxi_Blob_Sink_Geo",
+									"referenceName": "NYC_Taxi_Blob_Sink_Trip",
 									"type": "DatasetReference",
 									"parameters": {
 										"Blobstorage_Name": {
@@ -845,7 +845,7 @@
 				]
 			},
 			"RelativeUrl_Trip": {
-				"type": "string"
+				"type": "array"
 			}
 		},
 		"folder": {
