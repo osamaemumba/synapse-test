@@ -1,5 +1,5 @@
 {
-	"name": "NYC_Taxi_Data_Table_Trip",
+	"name": "NYC_Taxi_Data_Table_Time",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SynapseAnalyticsSQLPoolLinkedservice",

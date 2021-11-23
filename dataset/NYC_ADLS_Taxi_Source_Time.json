@@ -1,5 +1,5 @@
 {
-	"name": "NYC_ADLS_Taxi_Source_Trip",
+	"name": "NYC_ADLS_Taxi_Source_Time",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeNYC",

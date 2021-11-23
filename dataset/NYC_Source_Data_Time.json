@@ -1,5 +1,5 @@
 {
-	"name": "NYC_Source_Data_Trip",
+	"name": "NYC_Source_Data_Time",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "HttpServerNYCTaxi",
