@@ -716,7 +716,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@pipeline().parameters.RelativeUrl_Trip",
+						"value": "@pipeline().parameters.RelativeUrl_Time",
 						"type": "Expression"
 					},
 					"activities": [
@@ -821,7 +821,7 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "2013/Trip",
+							"wildcardFolderPath": "2013/Time",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
@@ -927,78 +927,6 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"ordinal": 1
-								},
-								"sink": {
-									"name": "GeographyID",
-									"type": "Int32",
-									"physicalType": "int"
-								}
-							},
-							{
-								"source": {
-									"ordinal": 2
-								},
-								"sink": {
-									"name": "ZipCodeBKey",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"ordinal": 3
-								},
-								"sink": {
-									"name": "County",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"ordinal": 4
-								},
-								"sink": {
-									"name": "City",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"ordinal": 5
-								},
-								"sink": {
-									"name": "State",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"ordinal": 6
-								},
-								"sink": {
-									"name": "Country",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"ordinal": 7
-								},
-								"sink": {
-									"name": "ZipCode",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							}
-						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
@@ -1097,7 +1025,7 @@
 					"2013/Geography/QID6415_20171107_10448_10.txt"
 				]
 			},
-			"RelativeUrl_Trip": {
+			"RelativeUrl_Time": {
 				"type": "array",
 				"defaultValue": [
 					"2013/Trip2013/QID6392_20171107_05910_0.txt",

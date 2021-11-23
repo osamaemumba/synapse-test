@@ -28,7 +28,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "2013/Trip",
+				"folderPath": "2013/Time",
 				"fileSystem": "nyctaxi"
 			},
 			"columnDelimiter": ",",
