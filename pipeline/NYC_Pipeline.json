@@ -331,7 +331,7 @@
 						]
 					},
 					{
-						"activity": "NYC_Trip_Data_Copy_ADLS",
+						"activity": "NYC_Time_Data_Copy_ADLS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -710,7 +710,7 @@
 				]
 			},
 			{
-				"name": "ForEach_Trip",
+				"name": "ForEach_Time",
 				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
@@ -797,11 +797,11 @@
 				}
 			},
 			{
-				"name": "NYC_Trip_Data_Copy_ADLS",
+				"name": "NYC_Time_Data_Copy_ADLS",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "ForEach_Trip",
+						"activity": "ForEach_Time",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -884,7 +884,7 @@
 				]
 			},
 			{
-				"name": "NYC_Trip_Data_Copy_SQLPool",
+				"name": "NYC_Time_Data_Copy_SQLPool",
 				"type": "Copy",
 				"dependsOn": [
 					{
