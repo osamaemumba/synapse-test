@@ -35,7 +35,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "NYC_Taxi_Data_Schema",
-			"table": "NYC_Taxi_Trip_Data_Table"
+			"table": "NYC_Taxi_Time_Data_Table"
 		}
 	}
 }
