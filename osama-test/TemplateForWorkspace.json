@@ -479,6 +479,12 @@
 								"dependencyConditions": [
 									"Succeeded"
 								]
+							},
+							{
+								"activity": "NYC_Time_Data_Copy_ADLS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
 						],
 						"policy": {
@@ -852,6 +858,342 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "ForEach_Time",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.RelativeUrl_Time",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "NYC_Geo_Data_Copy_Blob_Time",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "GET"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".csv"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "NYC_Source_Data_Time",
+											"type": "DatasetReference",
+											"parameters": {
+												"RelativeUrlValue": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "NYC_Taxi_Blob_Sink_Time",
+											"type": "DatasetReference",
+											"parameters": {
+												"Blobstorage_Name": {
+													"value": "@pipeline().parameters.Blobstorage_Name",
+													"type": "Expression"
+												},
+												"Keyvault_Name": {
+													"value": "@pipeline().parameters.Keyvault_Name",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "NYC_Time_Data_Copy_ADLS",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach_Time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "2013/Time",
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "NYC_Taxi_Blob_Source_Time",
+								"type": "DatasetReference",
+								"parameters": {
+									"Blobstorage_Name": {
+										"value": "@pipeline().parameters.Blobstorage_Name",
+										"type": "Expression"
+									},
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "NYC_Taxi_ADLS_Sink_Time",
+								"type": "DatasetReference",
+								"parameters": {
+									"Datalake_Name": {
+										"value": "@pipeline().parameters.Datalake_Name",
+										"type": "Expression"
+									},
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "NYC_Time_Data_Copy_SQLPool",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Create_Schema",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "2013/Time",
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"preCopyScript": {
+									"value": "IF OBJECT_ID('[NYC_Taxi_Data_Schema].[NYC_Taxi_Time_Data_Table]', 'U') IS NOT NULL \nBEGIN\nEXEC('DROP TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Time_Data_Table]\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Time_Data_Table]\n(\n    [TimeID] int NOT NULL,\n    [TimeBKey] varchar(8) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,\n    [HourNumber] tinyint NOT NULL,\n    [MinuteNumber] tinyint NOT NULL,\n    [SecondNumber] tinyint NOT NULL,\n    [TimeInSecond] int NOT NULL,\n    [HourlyBucket] varchar(15) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,\n    [DayTimeBucketGroupKey] int NOT NULL,\n    [DayTimeBucket] varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Time_Data_Table]\n(\n    [TimeID] int NOT NULL,\n    [TimeBKey] varchar(8) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,\n    [HourNumber] tinyint NOT NULL,\n    [MinuteNumber] tinyint NOT NULL,\n    [SecondNumber] tinyint NOT NULL,\n    [TimeInSecond] int NOT NULL,\n    [HourlyBucket] varchar(15) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,\n    [DayTimeBucketGroupKey] int NOT NULL,\n    [DayTimeBucket] varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL\n)\nselect Count(*) from sys.symmetric_keys;\nEND",
+									"type": "Expression"
+								},
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"ordinal": 1
+										},
+										"sink": {
+											"name": "TimeID"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 2
+										},
+										"sink": {
+											"name": "TimeBKey"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 3
+										},
+										"sink": {
+											"name": "HourNumber"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 4
+										},
+										"sink": {
+											"name": "MinuteNumber"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 5
+										},
+										"sink": {
+											"name": "SecondNumber"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 6
+										},
+										"sink": {
+											"name": "TimeInSecond"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 7
+										},
+										"sink": {
+											"name": "HourlyBucket"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 8
+										},
+										"sink": {
+											"name": "DayTimeBucketGroupKey"
+										}
+									},
+									{
+										"source": {
+											"ordinal": 9
+										},
+										"sink": {
+											"name": "DayTimeBucket"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "NYC_ADLS_Taxi_Source_Time",
+								"type": "DatasetReference",
+								"parameters": {
+									"Datalake_Name": {
+										"value": "@pipeline().parameters.Datalake_Name",
+										"type": "Expression"
+									},
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "NYC_Taxi_Data_Table_Time",
+								"type": "DatasetReference",
+								"parameters": {
+									"Keyvault_Name": {
+										"value": "@pipeline().parameters.Keyvault_Name",
+										"type": "Expression"
+									},
+									"SQLLoginUsername": {
+										"value": "@pipeline().parameters.SQLLoginUsername",
+										"type": "Expression"
+									},
+									"ServerFQDN": {
+										"value": "@pipeline().parameters.ServerFQDN",
+										"type": "Expression"
+									}
+								}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -910,6 +1252,22 @@
 							"2013/Geography/QID6415_20171107_10448_9.txt",
 							"2013/Geography/QID6415_20171107_10448_10.txt"
 						]
+					},
+					"RelativeUrl_Time": {
+						"type": "array",
+						"defaultValue": [
+							"2013/Time/QID6418_20171107_10550_0.txt",
+							"2013/Time/QID6418_20171107_10550_1.txt",
+							"2013/Time/QID6418_20171107_10550_2.txt",
+							"2013/Time/QID6418_20171107_10550_3.txt",
+							"2013/Time/QID6418_20171107_10550_4.txt",
+							"2013/Time/QID6418_20171107_10550_5.txt",
+							"2013/Time/QID6418_20171107_10550_6.txt",
+							"2013/Time/QID6418_20171107_10550_7.txt",
+							"2013/Time/QID6418_20171107_10550_8.txt",
+							"2013/Time/QID6418_20171107_10550_9.txt",
+							"2013/Time/QID6418_20171107_10550_10.txt"
+						]
 					}
 				},
 				"folder": {
@@ -928,10 +1286,16 @@
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_ADLS_Sink_Geo')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_ADLS_Taxi_Source_Geo')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Data_Table_Geo')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Source_Time')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_ADLS_Sink_Time')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_ADLS_Taxi_Source_Time')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Data_Table_Time')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Source_Data')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink')]",
 				"[concat(variables('workspaceId'), '/datasets/NYC_Source_Data_Geo')]",
-				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink_Geo')]"
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink_Geo')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Source_Data_Time')]",
+				"[concat(variables('workspaceId'), '/datasets/NYC_Taxi_Blob_Sink_Time')]"
 			]
 		},
 		{
@@ -980,7 +1344,167 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_ADLS_Taxi_Source_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeNYC",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Datalake_name": {
+							"value": "@dataset().Datalake_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Datalake_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_ADLS_Taxi_Source_Time')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeNYC",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Datalake_name": {
+							"value": "@dataset().Datalake_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Datalake_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/NYC_Source_Data')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HttpServerNYCTaxi",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"RelativeUrlValue": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "@dataset().RelativeUrlValue",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/HttpServerNYCTaxi')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Source_Data_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HttpServerNYCTaxi",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"RelativeUrlValue": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "@dataset().RelativeUrlValue",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/HttpServerNYCTaxi')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Source_Data_Time')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -1061,6 +1585,98 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_ADLS_Sink_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeNYC",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Datalake_name": {
+							"value": "@dataset().Datalake_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Datalake_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "2013/Geography",
+						"fileSystem": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_ADLS_Sink_Time')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeNYC",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Datalake_name": {
+							"value": "@dataset().Datalake_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Datalake_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "2013/Time",
+						"fileSystem": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Sink')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -1106,7 +1722,187 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Sink_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageNYCSink",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Blobstorage_Name": {
+							"value": "@dataset().Blobstorage_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Blobstorage_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageNYCSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Sink_Time')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageNYCSink",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Blobstorage_Name": {
+							"value": "@dataset().Blobstorage_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Blobstorage_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageNYCSink')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Source')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageNYCSink",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Blobstorage_Name": {
+							"value": "@dataset().Blobstorage_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Blobstorage_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageNYCSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Source_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageNYCSink",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Blobstorage_Name": {
+							"value": "@dataset().Blobstorage_Name",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Blobstorage_Name": {
+						"type": "string"
+					},
+					"Keyvault_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "nyctaxi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageNYCSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Source_Time')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -1233,6 +2029,98 @@
 				"typeProperties": {
 					"schema": "NYC_Taxi_Data_Schema",
 					"table": "NYC_Taxi_Weather_Data_Table"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/SynapseAnalyticsSQLPoolLinkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Data_Table_Geo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SynapseAnalyticsSQLPoolLinkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"SQLLoginUsername": {
+							"value": "@dataset().SQLLoginUsername",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						},
+						"ServerFQDN": {
+							"value": "@dataset().ServerFQDN",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Keyvault_Name": {
+						"type": "string"
+					},
+					"SQLLoginUsername": {
+						"type": "string"
+					},
+					"ServerFQDN": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "NYC_Taxi_Data_Schema",
+					"table": "NYC_Taxi_Geo_Data_Table"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/SynapseAnalyticsSQLPoolLinkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Data_Table_Time')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SynapseAnalyticsSQLPoolLinkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"SQLLoginUsername": {
+							"value": "@dataset().SQLLoginUsername",
+							"type": "Expression"
+						},
+						"Keyvault_Name": {
+							"value": "@dataset().Keyvault_Name",
+							"type": "Expression"
+						},
+						"ServerFQDN": {
+							"value": "@dataset().ServerFQDN",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"Keyvault_Name": {
+						"type": "string"
+					},
+					"SQLLoginUsername": {
+						"type": "string"
+					},
+					"ServerFQDN": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "NYC_Taxi_Data_Schema",
+					"table": "NYC_Taxi_Time_Data_Table"
 				}
 			},
 			"dependsOn": [
@@ -1545,268 +2433,6 @@
 			},
 			"dependsOn": [],
 			"location": "eastus2"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Sink_Geo')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorageNYCSink",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"Blobstorage_Name": {
-							"value": "@dataset().Blobstorage_Name",
-							"type": "Expression"
-						},
-						"Keyvault_Name": {
-							"value": "@dataset().Keyvault_Name",
-							"type": "Expression"
-						}
-					}
-				},
-				"parameters": {
-					"Blobstorage_Name": {
-						"type": "string"
-					},
-					"Keyvault_Name": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "nyctaxi"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageNYCSink')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/NYC_Source_Data_Geo')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "HttpServerNYCTaxi",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"RelativeUrlValue": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": {
-							"value": "@dataset().RelativeUrlValue",
-							"type": "Expression"
-						}
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/HttpServerNYCTaxi')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Blob_Source_Geo')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorageNYCSink",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"Blobstorage_Name": {
-							"value": "@dataset().Blobstorage_Name",
-							"type": "Expression"
-						},
-						"Keyvault_Name": {
-							"value": "@dataset().Keyvault_Name",
-							"type": "Expression"
-						}
-					}
-				},
-				"parameters": {
-					"Blobstorage_Name": {
-						"type": "string"
-					},
-					"Keyvault_Name": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "nyctaxi"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageNYCSink')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_ADLS_Sink_Geo')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeNYC",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"Datalake_name": {
-							"value": "@dataset().Datalake_Name",
-							"type": "Expression"
-						},
-						"Keyvault_Name": {
-							"value": "@dataset().Keyvault_Name",
-							"type": "Expression"
-						}
-					}
-				},
-				"parameters": {
-					"Datalake_Name": {
-						"type": "string"
-					},
-					"Keyvault_Name": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "2013/Geography",
-						"fileSystem": "nyctaxi"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/NYC_ADLS_Taxi_Source_Geo')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeNYC",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"Datalake_name": {
-							"value": "@dataset().Datalake_Name",
-							"type": "Expression"
-						},
-						"Keyvault_Name": {
-							"value": "@dataset().Keyvault_Name",
-							"type": "Expression"
-						}
-					}
-				},
-				"parameters": {
-					"Datalake_Name": {
-						"type": "string"
-					},
-					"Keyvault_Name": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "nyctaxi"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeNYC')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/NYC_Taxi_Data_Table_Geo')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SynapseAnalyticsSQLPoolLinkedservice",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"SQLLoginUsername": {
-							"value": "@dataset().SQLLoginUsername",
-							"type": "Expression"
-						},
-						"Keyvault_Name": {
-							"value": "@dataset().Keyvault_Name",
-							"type": "Expression"
-						},
-						"ServerFQDN": {
-							"value": "@dataset().ServerFQDN",
-							"type": "Expression"
-						}
-					}
-				},
-				"parameters": {
-					"Keyvault_Name": {
-						"type": "string"
-					},
-					"SQLLoginUsername": {
-						"type": "string"
-					},
-					"ServerFQDN": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "NYC_Taxi_Data_Schema",
-					"table": "NYC_Taxi_Geo_Data_Table"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/SynapseAnalyticsSQLPoolLinkedservice')]"
-			]
 		}
 	]
 }
