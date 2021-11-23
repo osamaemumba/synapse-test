@@ -862,7 +862,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "NYC_Taxi_ADLS_Sink_Geo",
+						"referenceName": "NYC_Taxi_ADLS_Sink_Trip",
 						"type": "DatasetReference",
 						"parameters": {
 							"Datalake_Name": {
