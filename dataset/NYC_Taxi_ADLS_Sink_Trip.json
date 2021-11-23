@@ -1,0 +1,41 @@
+{
+	"name": "NYC_Taxi_ADLS_Sink_Trip",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeNYC",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"Datalake_name": {
+					"value": "@dataset().Datalake_Name",
+					"type": "Expression"
+				},
+				"Keyvault_Name": {
+					"value": "@dataset().Keyvault_Name",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"Datalake_Name": {
+				"type": "string"
+			},
+			"Keyvault_Name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "2013/Trip",
+				"fileSystem": "nyctaxi"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

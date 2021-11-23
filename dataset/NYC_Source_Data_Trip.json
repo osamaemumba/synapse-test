@@ -1,0 +1,30 @@
+{
+	"name": "NYC_Source_Data_Trip",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HttpServerNYCTaxi",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"RelativeUrlValue": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@dataset().RelativeUrlValue",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
