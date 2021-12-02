@@ -1044,6 +1044,115 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Add_Timestamp_Column_Weather",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "NYC_Weather_Data_Copy_SQLPool",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"additionalColumns": [
+							{
+								"name": "Load Time",
+								"value": {
+									"value": "@utcnow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": "IF OBJECT_ID('[NYC_Taxi_Data_Schema].[NYC_Taxi_Weather_Data_Derived_Table]', 'U') IS NOT NULL \nBEGIN\nEXEC('DROP TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Weather_Data_Derived_Table]\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Weather_Data_Derived_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL,\n    [LoadTime] smalldatetime NOT NULL\n)')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\nCREATE TABLE [NYC_Taxi_Data_Schema].[NYC_Taxi_Weather_Data_Derived_Table]\n(\n    [DateID] int NOT NULL,\n    [GeographyID] int NOT NULL,\n    [PrecipitationInches] float NOT NULL,\n    [AvgTemperatureFahrenheit] float NOT NULL,\n    [LoadTime] smalldatetime NOT NULL\n)\nselect Count(*) from sys.symmetric_keys;\nEND",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "NYC_Taxi_Data_Table_Source",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "NYC_Taxi_Data_Table_Derived_Sink",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Add_Timestamp_Column_Geo",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "NYC_Geo_Data_Copy_SQLPool",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
+			},
+			{
+				"name": "Add_Timestamp_Column_Time",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "NYC_Time_Data_Copy_SQLPool",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
 			}
 		],
 		"parameters": {
