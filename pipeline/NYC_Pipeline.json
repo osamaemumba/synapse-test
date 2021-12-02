@@ -1098,13 +1098,41 @@
 				"inputs": [
 					{
 						"referenceName": "NYC_Taxi_Data_Table_Source",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"SQLLoginUsername": {
+								"value": "@pipeline().parameters.SQLLoginUsername",
+								"type": "Expression"
+							},
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
+							},
+							"ServerFQDN": {
+								"value": "@pipeline().parameters.ServerFQDN",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
 					{
 						"referenceName": "NYC_Taxi_Data_Table_Derived_Sink",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"SQLLoginUsername": {
+								"value": "@pipeline().parameters.SQLLoginUsername",
+								"type": "Expression"
+							},
+							"Keyvault_Name": {
+								"value": "@pipeline().parameters.Keyvault_Name",
+								"type": "Expression"
+							},
+							"ServerFQDN": {
+								"value": "@pipeline().parameters.ServerFQDN",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
