@@ -18,7 +18,7 @@
 					"source": {
 						"type": "SqlDWSource",
 						"sqlReaderQuery": {
-							"value": "IF NOT EXISTS (SELECT * FROM sys.procedures WHERE name = 'createPurviewUserSp')\nBEGIN\nEXEC('CREATE PROCEDURE createPurviewUserSp\nAS\nCREATE USER [@{pipeline().parameters.Purview_Account_Name}] FROM EXTERNAL PROVIDER\nEXEC sp_addrolemember [db_datareader], [@{pipeline().parameters.Purview_Account_Name}]')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\n    select Count(*) from sys.symmetric_keys;\nEND",
+							"value": "IF OBJECT_ID('createPurviewUserSp') IS NULL\nBEGIN\nEXEC('CREATE PROCEDURE createPurviewUserSp\nAS\nCREATE USER [@{pipeline().parameters.Purview_Account_Name}] FROM EXTERNAL PROVIDER\nEXEC sp_addrolemember [db_datareader], [@{pipeline().parameters.Purview_Account_Name}]')\nselect Count(*) from sys.symmetric_keys;\nEND\nELSE\nBEGIN\n    select Count(*) from sys.symmetric_keys;\nEND",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
